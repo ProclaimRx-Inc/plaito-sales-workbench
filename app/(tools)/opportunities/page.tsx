@@ -38,7 +38,7 @@ export default function OpportunitiesPage() {
   return (
     <>
       <PageHeader title="HCP Opportunities" description="A visible score, four quadrants, and a rule-based next best action per HCP" />
-      <main className="flex-1 space-y-6 p-4 md:p-6">
+      <div className="flex-1 space-y-6 p-4 md:p-6">
         <div className="flex flex-wrap items-center gap-4 rounded-xl border bg-card p-3">
           <Tabs value={quadrant} onValueChange={(v) => setQuadrant(v as Quadrant | "All")}>
             <TabsList className="h-8">
@@ -116,7 +116,7 @@ export default function OpportunitiesPage() {
             ] satisfies import("@/components/data-table").TableColumn<OpportunityRow>[]}
           />
         </Section>
-      </main>
+      </div>
     </>
   )
 }

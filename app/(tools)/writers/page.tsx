@@ -35,7 +35,7 @@ export default function WritersPage() {
   return (
     <>
       <PageHeader title="Writer Lifecycle" description="Who started, who kept going, who stopped — with the Monday new-writer report" />
-      <main className="flex-1 space-y-6 p-4 md:p-6">
+      <div className="flex-1 space-y-6 p-4 md:p-6">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {SEGMENTS.map((s) => (
             <button key={s.key} onClick={() => setSegment(segment === s.key ? "All" : s.key)} className={cn("rounded-xl border-l-4 border bg-card px-4 py-3 text-left transition hover:bg-accent", s.tone, segment === s.key && "ring-2 ring-ring")}>
@@ -123,7 +123,7 @@ export default function WritersPage() {
             />
           </Section>
         </div>
-      </main>
+      </div>
     </>
   )
 }

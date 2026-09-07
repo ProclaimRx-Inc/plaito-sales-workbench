@@ -21,7 +21,7 @@ export default function GoalsPage() {
   return (
     <>
       <PageHeader title="Goal Attainment" description="Quarter-to-date fTRx against territory goals. This one needs a goals table the platform does not have yet." />
-      <main className="flex-1 space-y-6 p-4 md:p-6">
+      <div className="flex-1 space-y-6 p-4 md:p-6">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Kpi label="National % of goal, QTD" value={fmtPct(actual / goal, 0)} sub={`${fmtInt(actual)} of ${fmtInt(goal)} fTRx`} def={g.def} />
           <Kpi label="Quarter elapsed" value={fmtPct(pace, 0)} sub={`${g.elapsed} of ${g.total} true weeks`} def={g.def} />
@@ -52,7 +52,7 @@ export default function GoalsPage() {
             ]}
           />
         </Section>
-      </main>
+      </div>
     </>
   )
 }

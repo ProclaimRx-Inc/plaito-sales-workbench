@@ -20,7 +20,7 @@ export default function PulsePage() {
   return (
     <>
       <PageHeader title="Launch Pulse" description={`EXXUA national view · Rx data through ${fmtDate(h.last.week)}`} />
-      <main className="flex-1 space-y-6 p-4 md:p-6">
+      <div className="flex-1 space-y-6 p-4 md:p-6">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           <Kpi label="fTRx, latest week" value={fmtInt(h.last.exxTrx)} delta={h.wowPct} sub={`${fmtDelta(h.wow)} vs ${fmtWeek(h.prev.week)}`} def={trend.def} />
           <Kpi label="4-week average" value={fmtInt(h.avg4)} delta={h.avg4Growth} sub="vs the prior 4 weeks" def={trend.def} />
@@ -93,7 +93,7 @@ export default function PulsePage() {
         <Section title="Data freshness" description="The 'what is the most recent week of data' question, answered per source">
           <Freshness />
         </Section>
-      </main>
+      </div>
     </>
   )
 }

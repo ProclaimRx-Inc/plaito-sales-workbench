@@ -22,7 +22,7 @@ export default function PayersPage() {
   return (
     <>
       <PageHeader title="Payers & Copay" description="Channel mix with starts vs continuing, the Medicaid plan × week pivot, and the copay program" />
-      <main className="flex-1 space-y-6 p-4 md:p-6">
+      <div className="flex-1 space-y-6 p-4 md:p-6">
         <Section
           title="EXXUA fTRx by payer channel"
           description="The four windows the chat users asked about, side by side with one definition"
@@ -135,7 +135,7 @@ export default function PayersPage() {
             </div>
           </Section>
         </div>
-      </main>
+      </div>
     </>
   )
 }

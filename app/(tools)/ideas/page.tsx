@@ -13,7 +13,7 @@ export default function IdeasPage() {
   return (
     <>
       <PageHeader title="Product ideas" description="Distilled from PLAiTO_Sales_Prompt_Taxonomy.xlsx — 20 categories, 13 asked in production, 7 not yet" />
-      <main className="flex-1 space-y-6 p-4 md:p-6">
+      <div className="flex-1 space-y-6 p-4 md:p-6">
         <div className="rounded-xl border bg-card p-4 text-sm leading-relaxed">
           <p className="font-medium">The thesis</p>
           <p className="mt-1 text-muted-foreground">
@@ -64,7 +64,7 @@ export default function IdeasPage() {
             ))}
           </div>
         </Section>
-      </main>
+      </div>
     </>
   )
 }

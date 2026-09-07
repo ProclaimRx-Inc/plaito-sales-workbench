@@ -33,7 +33,7 @@ export default function EngagementPage() {
   return (
     <>
       <PageHeader title="Engagement → Rx" description="Did the field reach the targets, and did the reach turn into scripts" />
-      <main className="flex-1 space-y-6 p-4 md:p-6">
+      <div className="flex-1 space-y-6 p-4 md:p-6">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Kpi label={`Targets reached, ${quarter}`} value={fmtPct(cov.rows.filter((r) => r.tier).reduce((a, r) => a + r.called, 0) / Math.max(1, cov.rows.filter((r) => r.tier).reduce((a, r) => a + r.hcps, 0)), 0)} sub="targets with ≥1 call" def={cov.def} />
           <Kpi label="Priority targets never called" value={fmtInt(cov.uncalledPriority.length)} sub={`of ${fmtInt(cov.rows[0].hcps)} Priority (A) targets this quarter`} def={cov.def} />
@@ -146,7 +146,7 @@ export default function EngagementPage() {
             </div>
           </div>
         </Section>
-      </main>
+      </div>
     </>
   )
 }

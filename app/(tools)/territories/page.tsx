@@ -28,7 +28,7 @@ export default function TerritoriesPage() {
   return (
     <>
       <PageHeader title="Territory Scorecard" description="Current alignment only. White Space is its own row and never leaks into a territory." />
-      <main className="flex-1 space-y-6 p-4 md:p-6">
+      <div className="flex-1 space-y-6 p-4 md:p-6">
         <div className="grid gap-6 lg:grid-cols-3">
           <Section className="lg:col-span-1" title="Which territory owns this ZIP?" description="Reads the current alignment row (end_date = current)">
             <div className="relative">
@@ -109,7 +109,7 @@ export default function TerritoriesPage() {
             {open && <TerritoryDetail row={open} />}
           </SheetContent>
         </Sheet>
-      </main>
+      </div>
     </>
   )
 }

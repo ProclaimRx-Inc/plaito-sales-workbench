@@ -85,7 +85,7 @@ export const IDEAS: Idea[] = [
     href: "/payers",
     status: "Prototyped",
     problem: "Channel mix (Commercial / Medicaid / Medicare / TriCare) with starts vs continuing was asked for four windows in a row; the Medicaid 'plans as rows, weeks as columns' pivot was requested three times; copay questions revolve around network share, blended rate and net-of-reversals.",
-    quotes: ["Break down Escitalopram StarterRx and NRx by payer channel … in the latest true week, splitting starts versus continuing", "plans should be listed in the first column with the weeks going across the top", "which escitalopram network pharmacy has the lowest blended copay rate"],
+    quotes: ["Break down Escitalopram TRx and NRx by payer channel … in the latest true week, splitting starts versus continuing", "plans should be listed in the first column with the weeks going across the top", "which escitalopram network pharmacy has the lowest blended copay rate"],
     tool: "A window switcher over one channel definition, the plan × week heat table, and copay KPIs plus a pharmacy table with blended rate — all net of reversals by default and labelled as such.",
     categories: ["Payer, Access & Channel", "Patient Support & Pharmacy"],
   },

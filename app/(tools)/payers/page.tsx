@@ -64,7 +64,7 @@ export default function PayersPage() {
           </div>
         </Section>
 
-        <Section title="Medicaid & Managed Medicaid plans × week" description="Plans down, week-ending dates across, Escitalopram StarterRx in the cells" def={pivot.def}>
+        <Section title="Medicaid & Managed Medicaid plans × week" description="Plans down, week-ending dates across, Escitalopram TRx in the cells" def={pivot.def}>
           <div className="overflow-x-auto rounded-md border">
             <table className="w-full text-xs">
               <thead className="bg-muted/50">

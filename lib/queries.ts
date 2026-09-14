@@ -77,7 +77,7 @@ export function weeklyTrend(): { rows: TrendRow[]; def: Definition } {
     rows,
     def: {
       title: "Weekly Escitalopram TRx since launch",
-      sources: ["rpt_allhcp_sha_rx_weekly"],
+      sources: ["fact_rx_hcp_weekly"],
       window: `Launch week (w/e ${data.weeks[data.launchWeekIndex].end}) through latest loaded week (w/e ${data.latestWeek.end})`,
       filters: ["All HCPs, including White Space", "Sat–Fri true weeks"],
       formula: "TRx = SUM(tunits); writers = COUNT DISTINCT npi WHERE tunits > 0; new writers = writers whose first week with tunits > 0 is this week",
@@ -141,7 +141,7 @@ export function wowBridge(weekIndex = d().latestWeek.index): { buckets: BridgeBu
     movers,
     def: {
       title: "Week-over-week TRx bridge",
-      sources: ["rpt_allhcp_sha_rx_weekly"],
+      sources: ["fact_rx_hcp_weekly"],
       window: `w/e ${d().weeks[weekIndex - 1].end} → w/e ${d().weeks[weekIndex].end}`,
       filters: ["HCP-level tunits, all HCPs"],
       formula: "Each HCP's change in tunits is assigned to exactly one bucket; bucket deltas sum to the national week-over-week change",
@@ -191,7 +191,7 @@ export function writerLifecycle(asOf = d().latestWeek.index): { rows: WriterRow[
     counts,
     def: {
       title: "Escitalopram writer lifecycle segments",
-      sources: ["rpt_allhcp_sha_rx_weekly", "fct_calls_list"],
+      sources: ["fact_rx_hcp_weekly", "fact_crm_calls"],
       window: `Launch through w/e ${data.weeks[asOf].end}`,
       filters: ["HCPs with at least one week of tunits > 0"],
       formula: "New = first week with tunits > 0 is the as-of week; Lapsed = no tunits in the last 8 weeks; At risk = none in the last 4–7 weeks; Consistent = wrote in ≥3 of the last 4 weeks; Repeat = everyone else",
@@ -214,7 +214,7 @@ export function newWriterReport(weekIndex: number) {
   void firstWriteWeek
   const def: Definition = {
     title: `New Escitalopram prescribers, w/e ${data.weeks[weekIndex].end}`,
-    sources: ["rpt_allhcp_sha_rx_weekly", "scd_zipterr", "hcp_targets", "fct_calls_list"],
+    sources: ["fact_rx_hcp_weekly", "dim_zip_territory_alignment", "dim_hcp_target_list", "fact_crm_calls"],
     window: `Single week ending ${data.weeks[weekIndex].end}; history back to launch for the 'never before' test`,
     filters: ["tunits > 0 in this week", "tunits = 0 in every prior week", "Territory from current ZIP alignment (end_date = current)", "Tier from the target list active this quarter"],
     formula: "One row per NPI; columns fixed: territory number, territory name, region, NPI, HCP, specialty, priority, tunits this week, starter tunits, payer channel of the first-week scripts, in-person calls before this week",
@@ -237,7 +237,7 @@ export function cohortRetention() {
   })
   const def: Definition = {
     title: "New-writer repeat rate by first-write month",
-    sources: ["rpt_allhcp_sha_rx_weekly"],
+    sources: ["fact_rx_hcp_weekly"],
     window: "Launch through latest loaded week; a cohort only reports a horizon once every member has had that many weeks",
     filters: [],
     formula: "within N = share of the cohort with tunits > 0 in any week 1..N after the first writing week",
@@ -306,9 +306,9 @@ export function territoryScorecard(weeks = 13): { rows: TerritoryRow[]; def: Def
     rows,
     def: {
       title: `Territory scorecard, trailing ${weeks} weeks`,
-      sources: ["rpt_allhcp_sha_rx_weekly", "scd_zipterr", "sales_rep_roster", "hcp_targets", "fct_calls_list"],
+      sources: ["fact_rx_hcp_weekly", "dim_zip_territory_alignment", "dim_sales_rep_roster", "dim_hcp_target_list", "fact_crm_calls"],
       window: `${weeks} weeks ending w/e ${data.latestWeek.end}; goal attainment is quarter-to-date for ${q}`,
-      filters: ["Current alignment only (scd_zipterr.end_date = current)", "Active roster rows only", "White Space shown as its own row, never mixed into a territory"],
+      filters: ["Current alignment only (dim_zip_territory_alignment.end_date = current)", "Active roster rows only", "White Space shown as its own row, never mixed into a territory"],
       formula: "MDD market TRx = SUM(trx_mkt_total); Escitalopram TRx = SUM(tunits); share = TRx / market TRx; payer split from the claim payment type; target coverage = targets with ≥1 call / targets",
     },
   }
@@ -426,7 +426,7 @@ export function hcpOpportunity(): { rows: OpportunityRow[]; medians: { potential
     medians: { potential: medPot, current: medCur },
     def: {
       title: "HCP opportunity score and quadrant",
-      sources: ["rpt_allhcp_sha_rx_weekly", "fct_calls_list", "fct_emails", "scd_zipterr", "hcp_targets"],
+      sources: ["fact_rx_hcp_weekly", "fact_crm_calls", "fact_field_emails", "dim_zip_territory_alignment", "dim_hcp_target_list"],
       window: `Trailing 13 weeks ending w/e ${data.latestWeek.end}`,
       filters: ["All HCPs in the HCP master, including White Space"],
       formula: "Potential = 0.50·pct-rank(MDD market TRx) + 0.25·pct-rank(branded MDD TRx) + 0.15·pct-rank(buspirone TRx) + 0.10·pct-rank(Auvelity TRx). Current = Escitalopram TRx. Quadrants split at the median potential and the median non-zero TRx.",
@@ -458,7 +458,7 @@ export function targetCoverage(quarter = d().latestWeek.quarter) {
   const uncalledPriority = data.hcps.filter((h) => h.tier === "Tier_A" && !calledBy.has(h.npi)).map((h) => ({ npi: h.npi, name: hcpName(h), specialty: h.specialty, territory: territory(h.territoryCode).name, rep: repName(territory(h.territoryCode).repId), city: h.city, state: h.state }))
   const def: Definition = {
     title: `Target coverage, ${quarter}`,
-    sources: ["hcp_targets", "fct_calls_list", "rpt_allhcp_sha_rx_weekly"],
+    sources: ["dim_hcp_target_list", "fact_crm_calls", "fact_rx_hcp_weekly"],
     window: `Calendar ${quarter}`,
     filters: ["Targets from the list active this quarter", "White Space excluded (no rep to call)", "All call types count as a call"],
     formula: "called = COUNT DISTINCT npi with ≥1 call in the quarter; wrote = tunits > 0 in any week of the quarter",
@@ -476,7 +476,7 @@ export function callsBeforeFirstRx() {
   const calledNeverWrote = [...inPersonCallsByNpi.keys()].filter((npi) => !writers.has(npi)).length
   const def: Definition = {
     title: "In-person calls before first Escitalopram Rx",
-    sources: ["fct_calls_list", "rpt_allhcp_sha_rx_weekly"],
+    sources: ["fact_crm_calls", "fact_rx_hcp_weekly"],
     window: "Launch through latest loaded week",
     filters: ["In-person = Face-to-face with HCP, HCP Meal, Office Visit (no prescriber contact)", "Calls in weeks strictly before the first week with tunits > 0"],
     formula: "One writer per row; histogram of the count of qualifying calls",
@@ -498,7 +498,7 @@ export function callEmailLift() {
   const rows = groups.map((g) => ({ group: g.group, hcps: g.npis.length, writers: g.npis.filter((n) => writers.has(n)).length, rate: g.npis.length ? g.npis.filter((n) => writers.has(n)).length / g.npis.length : 0 }))
   const def: Definition = {
     title: "Writer rate by promotional exposure",
-    sources: ["fct_calls_list", "fct_emails", "rpt_allhcp_sha_rx_weekly"],
+    sources: ["fact_crm_calls", "fact_field_emails", "fact_rx_hcp_weekly"],
     window: "Launch through latest loaded week",
     filters: ["Exposure is any-time, not sequenced before the first Rx"],
     formula: "rate = writers / HCPs in the exposure group",
@@ -523,7 +523,7 @@ export function eventPrePost(entries: { npi: string; date: string }[], horizon =
   })
   const def: Definition = {
     title: `Speaker program pre/post, ±${horizon} weeks`,
-    sources: ["rpt_allhcp_sha_rx_weekly", "fct_calls_list"],
+    sources: ["fact_rx_hcp_weekly", "fact_crm_calls"],
     window: `${horizon} true weeks before the program week vs the program week plus ${horizon - 1} after`,
     filters: ["Program week = the Sat–Fri week containing the program date"],
     formula: "pre = SUM(tunits) in the pre window; post = SUM in the post window; first call after = days from program date to the first CRM call on/after it",
@@ -568,7 +568,7 @@ export function channelSplit(key: WindowKey) {
   const ws = [...weeks].sort((a, b) => a - b)
   const def: Definition = {
     title: `Escitalopram TRx by payer channel — ${WINDOW_LABEL[key]}`,
-    sources: ["rpt_allhcp_sha_rx_weekly"],
+    sources: ["fact_rx_hcp_weekly"],
     window: `w/e ${data.weeks[ws[0]].end} through w/e ${data.weeks[ws[ws.length - 1]].end} (${ws.length} weeks)`,
     filters: ["Payment type collapsed to Commercial / Medicaid / Medicare / TriCare / Cash"],
     formula: "starts = starter-pack tunits; continuing = all other tunits; NRx allocated to channels pro rata within each HCP-week",
@@ -588,7 +588,7 @@ export function medicaidPlanPivot(weeks = 12) {
     .sort((a, b) => b.total - a.total)
   const def: Definition = {
     title: `Medicaid / Managed Medicaid plans × week, Escitalopram TRx`,
-    sources: ["fct_sha_prescriber_rx_weekly", "dim_managed_care"],
+    sources: ["fact_rx_plan_weekly", "dim_payer_plan"],
     window: `Last ${weeks} weeks ending w/e ${data.latestWeek.end}`,
     filters: ["payment_type IN (Medicaid, Managed Medicaid)", "Plans with zero volume in the window hidden"],
     formula: "Plans as rows, week ending dates as columns, Escitalopram TRx in the cells, sorted by window total",
@@ -616,7 +616,7 @@ export function copaySummary() {
   const starter = net.filter((c) => c.product === "Escitalopram Starter").length
   const def: Definition = {
     title: "Escitalopram copay program summary",
-    sources: ["rpt_copay_detail_bc"],
+    sources: ["fact_copay_claims"],
     window: `Program start through ${data.freshness[1].asOf}`,
     filters: ["Net of reversals unless labelled otherwise", "Network = is_network_pharmacy = 1", "Patients counted on claim_broad_member_id"],
     formula: "blended copay rate = program copay $ / non-reversed transactions per pharmacy",
@@ -644,7 +644,7 @@ export function goalAttainment() {
   const total = fridaysInQuarter(q)
   const def: Definition = {
     title: `Goal attainment, ${q} quarter-to-date`,
-    sources: ["rpt_allhcp_sha_rx_weekly", "sales_goals (new — does not exist yet)"],
+    sources: ["fact_rx_hcp_weekly", "fact_sales_goals (new — does not exist yet)"],
     window: `${elapsed} of ${total} true weeks elapsed`,
     filters: ["Field territories only"],
     formula: "attainment = QTD TRx / quarterly goal; pace = elapsed weeks / weeks in quarter",

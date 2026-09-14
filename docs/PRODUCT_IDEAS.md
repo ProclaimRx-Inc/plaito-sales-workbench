@@ -35,10 +35,10 @@ Status: **P** prototyped in this repo · **X** cross-cutting, built into every p
 | 11 | **Saved report templates + scheduled delivery** | – | Rx Performance · Territory · Data & Methodology | "Add back the weekly columns", "can I print this", "help me set up the dashboard" are asks for a rerunnable report. Save any tool view with parameters, XLSX export, Monday email, Definition in the footer. |
 | 12 | **Forecast band on the launch curve** | – | Forecasting & Planning · Launch Performance ☆ | One detailed prompt (footprint + 8 new territories from 8/1, three scenarios). A model with stated assumptions belongs in code, not in a chat turn. |
 
-Ideas considered and parked: an "ask about this chart" inline chat (kept as copy-prompt instead, to avoid re-introducing non-determinism into the tool), a full Symphony product/market dimension browser (the 200+ per-drug prompts in Market & Competitive Intelligence are benchmark-generated, not user-asked, so the demand is unproven), and a rep-level leaderboard (sensitive; needs a governance decision first).
+Ideas considered and parked: an "ask about this chart" inline chat (kept as copy-prompt instead, to avoid re-introducing non-determinism into the tool), a full syndicated-data product/market dimension browser (the 200+ per-drug prompts in Market & Competitive Intelligence are benchmark-generated, not user-asked, so the demand is unproven), and a rep-level leaderboard (sensitive; needs a governance decision first).
 
 ## Wiring to production
 
 - Each `lib/queries.ts` function maps to one parameterised SQL view or a `core_api` endpoint over the tables named in its Definition. The Definition object should be generated from the same SQL so they cannot drift.
-- Alignment reads must filter `scd_zipterr.end_date = current`; targets by the quarter's active list; copay net of reversals by default. Those three rules were the most common corrections users typed into chat.
+- Alignment reads must filter `dim_zip_territory_alignment.end_date = current`; targets by the quarter's active list; copay net of reversals by default. Those three rules were the most common corrections users typed into chat.
 - Goals (idea 7) and saved reports (idea 11) need new tables; everything else is read-only over existing marts.

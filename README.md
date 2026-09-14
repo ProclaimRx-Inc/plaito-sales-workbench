@@ -39,9 +39,9 @@ npm run typecheck
 
 ## Where the data comes from
 
-`lib/data/generate.ts` builds the dataset from a fixed seed: 62 Sat–Fri true weeks (launch w/e 2025-12-05 through w/e 2026-08-28), 44 CNS territories plus White Space, ~50 roster rows, 720 HCPs, weekly HCP-level Rx (Escitalopram TRx split into starter/continuing and payer channel, MDD market TRx, buspirone/Auvelity/Trintellix), CRM calls, field emails, copay claims, Medicaid plans and quarterly goals. `lib/queries.ts` holds every metric; each exported query returns its rows **and** the `Definition` shown in the drawer.
+`lib/data/generate.ts` builds the dataset from a fixed seed: 62 Sat–Fri true weeks (launch w/e 2025-12-05 through w/e 2026-08-28), 44 field territories plus White Space, ~50 roster rows, 720 HCPs, weekly HCP-level Rx (Escitalopram TRx split into starter/continuing and payer channel, MDD market TRx, buspirone/Auvelity/Trintellix), CRM calls, field emails, copay claims, Medicaid plans and quarterly goals. `lib/queries.ts` holds every metric; each exported query returns its rows **and** the `Definition` shown in the drawer.
 
-Column and table names in the definitions (`rpt_allhcp_sha_rx_weekly`, `scd_zipterr`, `fct_calls_list`, `rpt_copay_detail_bc`, …) are the real warehouse names so the wiring to production is a substitution, not a redesign.
+Column and table names in the definitions (`fact_rx_hcp_weekly`, `dim_zip_territory_alignment`, `fact_crm_calls`, `fact_copay_claims`, …) are the real warehouse names so the wiring to production is a substitution, not a redesign.
 
 ## Not in this prototype
 

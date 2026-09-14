@@ -37,7 +37,7 @@ export default function TerritoriesPage() {
             </div>
             <div className="mt-3 min-h-[88px] text-sm">
               {zip.length < 5 && <p className="text-xs text-muted-foreground">Try <button className="underline" onClick={() => setZip(exampleZip)}>{exampleZip}</button> or <button className="underline" onClick={() => setZip(data.territories[data.territories.length - 1].zips[0])}>a White Space ZIP</button>.</p>}
-              {zip.length === 5 && !zipHit && <p className="text-rose-600 dark:text-rose-400">ZIP {zip} is not in scd_zipterr. In production this means "not aligned" — not "White Space".</p>}
+              {zip.length === 5 && !zipHit && <p className="text-rose-600 dark:text-rose-400">ZIP {zip} is not in dim_zip_territory_alignment. In production this means "not aligned" — not "White Space".</p>}
               {zipHit && (
                 <div className="space-y-1">
                   <div className="flex items-center gap-2"><span className="font-mono text-xs text-muted-foreground">{zipHit.territory.code}</span><span className="font-semibold">{zipHit.territory.name}</span>{zipHit.territory.whiteSpace && <Badge variant="destructive" className="text-[10px]">White Space</Badge>}</div>

@@ -370,13 +370,13 @@ export function generate(): Dataset {
   }
 
   const freshness = [
-    { source: "Symphony weekly Rx (all-HCP)", table: "rpt_allhcp_sha_rx_weekly", asOf: latestWeek.end, cadence: "Weekly, Friday week end" },
-    { source: "Copay redemption flash", table: "rpt_copay_detail_bc", asOf: addDays(latestWeek.end, 5), cadence: "Daily" },
-    { source: "CRM calls", table: "fct_calls_list", asOf: addDays(latestWeek.end, 4), cadence: "Daily" },
-    { source: "Field emails", table: "fct_emails", asOf: addDays(latestWeek.end, 4), cadence: "Daily" },
-    { source: "ZIP → territory alignment", table: "scd_zipterr", asOf: "2026-07-01", cadence: "On alignment change" },
-    { source: "Target list", table: "hcp_targets", asOf: "2026-07-01", cadence: "Quarterly" },
-    { source: "Rep roster", table: "sales_rep_roster", asOf: addDays(latestWeek.end, 3), cadence: "Weekly" },
+    { source: "Syndicated weekly Rx (all HCPs)", table: "fact_rx_hcp_weekly", asOf: latestWeek.end, cadence: "Weekly, Friday week end" },
+    { source: "Copay redemption flash", table: "fact_copay_claims", asOf: addDays(latestWeek.end, 5), cadence: "Daily" },
+    { source: "CRM calls", table: "fact_crm_calls", asOf: addDays(latestWeek.end, 4), cadence: "Daily" },
+    { source: "Field emails", table: "fact_field_emails", asOf: addDays(latestWeek.end, 4), cadence: "Daily" },
+    { source: "ZIP → territory alignment", table: "dim_zip_territory_alignment", asOf: "2026-07-01", cadence: "On alignment change" },
+    { source: "Target list", table: "dim_hcp_target_list", asOf: "2026-07-01", cadence: "Quarterly" },
+    { source: "Rep roster", table: "dim_sales_rep_roster", asOf: addDays(latestWeek.end, 3), cadence: "Weekly" },
   ]
 
   return { weeks, latestWeek, launchWeekIndex, territories, reps, hcps, accounts, rx, calls, emails, copay, medicaidPlans, medicaidPlanRx, goals, freshness }

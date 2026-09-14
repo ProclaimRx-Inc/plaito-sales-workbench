@@ -120,7 +120,7 @@ export const IDEAS: Idea[] = [
     name: "Patient journey and switching",
     href: null,
     status: "Proposed",
-    problem: "Seventy asked prompts on Symphony patient data — new-to-brand, switching, concomitant therapy, multiple fills per patient — and the definitions are subtle (broad member id, net of reversals). A chat answer is easy to get wrong without noticing.",
+    problem: "Seventy asked prompts on syndicated patient-level data — new-to-brand, switching, concomitant therapy, multiple fills per patient — and the definitions are subtle (broad member id, net of reversals). A chat answer is easy to get wrong without noticing.",
     quotes: ["can you show me the patients that have had multiple fills of any escitalopram NDC based on broad member ID field?", "Which products do switching MDD patients most often switch FROM?"],
     tool: "A journey funnel (new to market → new to product → second fill → continuing) with a switch-from/switch-to matrix, patient counts on the documented id, and no patient-level export.",
     categories: ["Patient-Level & Rx Journey"],

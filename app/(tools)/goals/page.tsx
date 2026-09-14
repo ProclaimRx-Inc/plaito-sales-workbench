@@ -20,10 +20,10 @@ export default function GoalsPage() {
 
   return (
     <>
-      <PageHeader title="Goal Attainment" description="Quarter-to-date fTRx against territory goals. This one needs a goals table the platform does not have yet." />
+      <PageHeader title="Goal Attainment" description="Quarter-to-date TRx against territory goals. This one needs a goals table the platform does not have yet." />
       <div className="flex-1 space-y-6 p-4 md:p-6">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <Kpi label="National % of goal, QTD" value={fmtPct(actual / goal, 0)} sub={`${fmtInt(actual)} of ${fmtInt(goal)} fTRx`} def={g.def} />
+          <Kpi label="National % of goal, QTD" value={fmtPct(actual / goal, 0)} sub={`${fmtInt(actual)} of ${fmtInt(goal)} TRx`} def={g.def} />
           <Kpi label="Quarter elapsed" value={fmtPct(pace, 0)} sub={`${g.elapsed} of ${g.total} true weeks`} def={g.def} />
           <Kpi label="Territories at ≥100%" value={fmtInt(above)} sub="already past the quarterly goal" def={g.def} />
           <Kpi label="Territories off pace" value={fmtInt(behind)} sub="below 80% of the elapsed-time pace" def={g.def} />
@@ -40,7 +40,7 @@ export default function GoalsPage() {
               { key: "rep", header: "Rep", value: (r) => r.rep },
               { key: "region", header: "Region", value: (r) => r.region },
               { key: "goal", header: "Goal", value: (r) => r.goal, align: "right" },
-              { key: "actual", header: "QTD fTRx", value: (r) => r.actual, align: "right" },
+              { key: "actual", header: "QTD TRx", value: (r) => r.actual, align: "right" },
               { key: "gap", header: "Gap", value: (r) => Math.max(0, r.gap), align: "right" },
               { key: "att", header: "Attainment", value: (r) => fmtPct(r.attainment, 0), align: "right", render: (r) => <span className={cn("font-semibold", r.attainment >= 1 ? "text-emerald-600 dark:text-emerald-400" : r.attainment < pace * 0.8 ? "text-rose-600 dark:text-rose-400" : "")}>{fmtPct(r.attainment, 0)}</span> },
               { key: "bar", header: "", value: () => "", className: "w-[220px]", render: (r) => (

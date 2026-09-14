@@ -1,8 +1,8 @@
 # PLAiTO Sales Workbench (prototype)
 
-Deterministic, code-based sales tools distilled from the questions Aytu's production users have asked PLAiTO chat. Each page fixes one recurring report's definition in code, prints that definition next to every number, and gives the user an export — so the answer is the same every time and does not depend on an LLM rediscovering the SQL.
+Deterministic, code-based sales tools distilled from the questions a pharma client's production users have asked PLAiTO chat. Each page fixes one recurring report's definition in code, prints that definition next to every number, and gives the user an export — so the answer is the same every time and does not depend on an LLM rediscovering the SQL.
 
-**Everything here runs on a seeded synthetic dataset.** No real HCP, patient, rep, payer or Aytu data is present. The numbers are plausible, not true.
+**Everything here runs on a seeded synthetic dataset.** No real HCP, patient, rep, payer or client data is present. The numbers are plausible, not true.
 
 Stack mirrors [noclaim-demo](https://github.com/ProclaimRx-Inc/noclaim-demo): **Next.js 16** (App Router), **React 19**, **TypeScript**, **Tailwind v4**, **shadcn/ui** primitives, **recharts**. No auth and no backend — the whole thing is static and deploys on the Vercel Hobby tier.
 
@@ -39,7 +39,7 @@ npm run typecheck
 
 ## Where the data comes from
 
-`lib/data/generate.ts` builds the dataset from a fixed seed: 62 Sat–Fri true weeks (launch w/e 2025-12-05 through w/e 2026-08-28), 44 CNS territories plus White Space, ~50 roster rows, 720 HCPs, weekly HCP-level Rx (EXXUA fTRx split into titration/continuing and payer channel, MDD market TRx, buspirone/Auvelity/Trintellix), CRM calls, field emails, copay claims, Medicaid plans and quarterly goals. `lib/queries.ts` holds every metric; each exported query returns its rows **and** the `Definition` shown in the drawer.
+`lib/data/generate.ts` builds the dataset from a fixed seed: 62 Sat–Fri true weeks (launch w/e 2025-12-05 through w/e 2026-08-28), 44 CNS territories plus White Space, ~50 roster rows, 720 HCPs, weekly HCP-level Rx (Escitalopram TRx split into starter/continuing and payer channel, MDD market TRx, buspirone/Auvelity/Trintellix), CRM calls, field emails, copay claims, Medicaid plans and quarterly goals. `lib/queries.ts` holds every metric; each exported query returns its rows **and** the `Definition` shown in the drawer.
 
 Column and table names in the definitions (`rpt_allhcp_sha_rx_weekly`, `scd_zipterr`, `fct_calls_list`, `rpt_copay_detail_bc`, …) are the real warehouse names so the wiring to production is a substitution, not a redesign.
 

@@ -1,5 +1,5 @@
 /**
- * Synthetic EXXUA sales dataset.
+ * Synthetic Escitalopram sales dataset.
  *
  * Everything on every page is derived from the objects built here. The
  * generator is seeded, so the numbers are identical on every load and on
@@ -41,7 +41,7 @@ export type Rep = {
 
 export type Specialty = "Psychiatry" | "Family Medicine" | "Internal Medicine" | "Nurse Practitioner" | "Physician Assistant" | "Neurology"
 
-export type Tier = "Exxua_A" | "Exxua_A_Colocated" | "Exxua_B" | "Exxua_Plus" | null
+export type Tier = "Tier_A" | "Tier_A_Colocated" | "Tier_B" | "Tier_Plus" | null
 
 export type Hcp = {
   npi: string
@@ -69,11 +69,11 @@ export type PayerChannel = "Commercial" | "Medicaid" | "Medicare" | "TriCare" | 
 export type RxWeek = {
   npi: string
   weekIndex: number
-  /** EXXUA fTRx (tunits_exx) */
-  exxTrx: number
-  exxNrx: number
-  exxStarts: number // titration pack
-  exxCont: number // continuing
+  /** Escitalopram TRx (tunits) */
+  brandTrx: number
+  brandNrx: number
+  brandStarts: number // starter pack
+  brandCont: number // continuing
   /** MDD market TRx for this HCP-week */
   mktTrx: number
   mktBranded: number
@@ -114,7 +114,7 @@ export type CopayClaim = {
   pharmacyState: string
   network: boolean
   reversal: boolean
-  product: "EXXUA C" | "EXXUA T"
+  product: "Escitalopram 10 mg" | "Escitalopram Starter"
   copay: number
   oop: number
   channel: PayerChannel
@@ -136,9 +136,9 @@ export type Dataset = {
   emails: Email[]
   copay: CopayClaim[]
   medicaidPlans: MedicaidPlan[]
-  /** planId -> weekIndex -> EXXUA TRx */
+  /** planId -> weekIndex -> Escitalopram TRx */
   medicaidPlanRx: Record<string, Record<number, number>>
-  /** goal per territory per quarter (fTRx) */
+  /** goal per territory per quarter (TRx) */
   goals: Record<string, Record<string, number>>
   freshness: { source: string; table: string; asOf: string; cadence: string }[]
 }

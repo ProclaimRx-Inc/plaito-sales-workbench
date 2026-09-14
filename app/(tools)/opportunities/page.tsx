@@ -17,10 +17,10 @@ import { fmtInt, fmtPct } from "@/lib/format"
 
 const QUADRANTS: { key: Quadrant | "All"; color: string; hint: string }[] = [
   { key: "All", color: "", hint: "" },
-  { key: "Convert", color: "var(--chart-1)", hint: "High potential, little or no EXXUA — the white-space look-alike list" },
+  { key: "Convert", color: "var(--chart-1)", hint: "High potential, little or no Escitalopram — the white-space look-alike list" },
   { key: "Grow", color: "var(--chart-2)", hint: "High potential and already writing" },
-  { key: "Defend", color: "var(--chart-4)", hint: "Writing EXXUA but small market" },
-  { key: "Deprioritize", color: "var(--chart-5)", hint: "Small market, no EXXUA" },
+  { key: "Defend", color: "var(--chart-4)", hint: "Writing Escitalopram but small market" },
+  { key: "Deprioritize", color: "var(--chart-5)", hint: "Small market, no Escitalopram" },
 ]
 
 export default function OpportunitiesPage() {
@@ -58,13 +58,13 @@ export default function OpportunitiesPage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-5">
-          <Section className="lg:col-span-2" title="Value × potential" description="x = potential score (0–1), y = EXXUA fTRx trailing 13 weeks. Lines are the medians." def={opp.def}>
+          <Section className="lg:col-span-2" title="Value × potential" description="x = potential score (0–1), y = Escitalopram TRx trailing 13 weeks. Lines are the medians." def={opp.def}>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <ScatterChart margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis dataKey="potential" type="number" domain={[0, 1]} tick={{ fontSize: 10 }} name="Potential" />
-                  <YAxis dataKey="current" type="number" tick={{ fontSize: 10 }} name="fTRx 13 wk" />
+                  <YAxis dataKey="current" type="number" tick={{ fontSize: 10 }} name="TRx 13 wk" />
                   <ZAxis range={[14, 14]} />
                   <ReferenceLine x={opp.medians.potential} stroke="var(--muted-foreground)" strokeDasharray="4 4" />
                   <ReferenceLine y={opp.medians.current} stroke="var(--muted-foreground)" strokeDasharray="4 4" />
@@ -81,8 +81,8 @@ export default function OpportunitiesPage() {
               <p className="whitespace-normal break-words rounded-md bg-muted p-3 font-mono text-[12px]">potential = 0.50 · rank(MDD market TRx) + 0.25 · rank(branded MDD TRx) + 0.15 · rank(buspirone TRx) + 0.10 · rank(Auvelity TRx)</p>
               <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
                 <li>Ranks are percentile ranks across every HCP in the master over the trailing 13 weeks, so the score is stable week to week.</li>
-                <li>Buspirone and Auvelity are in because the chat users asked, repeatedly, whether those writers were more likely to adopt EXXUA. Here the weights are explicit and editable rather than rediscovered by an LLM each time.</li>
-                <li>Quadrants split at the median potential and the median non-zero fTRx (currently {opp.medians.potential.toFixed(2)} and {fmtInt(opp.medians.current)}).</li>
+                <li>Buspirone and Auvelity are in because the chat users asked, repeatedly, whether those writers were more likely to adopt Escitalopram. Here the weights are explicit and editable rather than rediscovered by an LLM each time.</li>
+                <li>Quadrants split at the median potential and the median non-zero TRx (currently {opp.medians.potential.toFixed(2)} and {fmtInt(opp.medians.current)}).</li>
                 <li>The action column is a small rule table: white space + high potential → alignment review; convert + zero calls → first call; lapsed writer → re-engage; and so on.</li>
               </ul>
             </div>
@@ -107,7 +107,7 @@ export default function OpportunitiesPage() {
               { key: "pot", header: "Potential", value: (r) => r.potential.toFixed(2), align: "right" },
               { key: "mkt", header: "MDD TRx", value: (r) => r.mkt13, align: "right" },
               { key: "busp", header: "Buspirone", value: (r) => r.buspirone13, align: "right" },
-              { key: "exx", header: "EXXUA fTRx", value: (r) => r.exx13, align: "right" },
+              { key: "brand", header: "Escitalopram TRx", value: (r) => r.brand13, align: "right" },
               { key: "share", header: "Share", value: (r) => fmtPct(r.share13), align: "right" },
               { key: "calls", header: "Calls 13 wk", value: (r) => r.calls13, align: "right" },
               { key: "last", header: "Wks since call", value: (r) => (r.weeksSinceCall === null ? "never" : r.weeksSinceCall), align: "right" },

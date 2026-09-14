@@ -38,7 +38,7 @@ export default function EngagementPage() {
           <Kpi label={`Targets reached, ${quarter}`} value={fmtPct(cov.rows.filter((r) => r.tier).reduce((a, r) => a + r.called, 0) / Math.max(1, cov.rows.filter((r) => r.tier).reduce((a, r) => a + r.hcps, 0)), 0)} sub="targets with ≥1 call" def={cov.def} />
           <Kpi label="Priority targets never called" value={fmtInt(cov.uncalledPriority.length)} sub={`of ${fmtInt(cov.rows[0].hcps)} Priority (A) targets this quarter`} def={cov.def} />
           <Kpi label="HCPs reached" value={fmtInt(totals.called)} sub={`of ${fmtInt(totals.hcps)} HCPs in territory`} def={cov.def} />
-          <Kpi label="Called but never wrote" value={fmtInt(cbf.calledNeverWrote)} sub="HCPs with in-person calls, zero EXXUA ever" def={cbf.def} />
+          <Kpi label="Called but never wrote" value={fmtInt(cbf.calledNeverWrote)} sub="HCPs with in-person calls, zero Escitalopram ever" def={cbf.def} />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-5">
@@ -64,7 +64,7 @@ export default function EngagementPage() {
                 { key: "called", header: "Called", value: (r) => r.called, align: "right" },
                 { key: "cov", header: "Coverage", value: (r) => fmtPct(r.hcps ? r.called / r.hcps : 0, 0), align: "right" },
                 { key: "avg", header: "Avg calls / reached", value: (r) => r.avgCalls.toFixed(1), align: "right" },
-                { key: "wrote", header: "Wrote EXXUA", value: (r) => r.wrote, align: "right" },
+                { key: "wrote", header: "Wrote Escitalopram", value: (r) => r.wrote, align: "right" },
                 { key: "wc", header: "Wrote · called", value: (r) => r.called ? fmtPct(r.wroteCalled / r.called, 0) : "—", align: "right" },
                 { key: "wu", header: "Wrote · not called", value: (r) => r.uncalled ? fmtPct(r.wroteUncalled / r.uncalled, 0) : "—", align: "right" },
               ]}
@@ -89,7 +89,7 @@ export default function EngagementPage() {
           </Section>
 
           <div className="space-y-6 lg:col-span-2">
-            <Section title="In-person calls before the first EXXUA Rx" description="Distribution across all writers since launch" def={cbf.def}>
+            <Section title="In-person calls before the first Escitalopram Rx" description="Distribution across all writers since launch" def={cbf.def}>
               <div className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={cbf.rows} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
@@ -137,8 +137,8 @@ export default function EngagementPage() {
                   { key: "npi", header: "NPI", value: (r) => r.npi, className: "font-mono text-[11px]" },
                   { key: "name", header: "HCP", value: (r) => r.name, render: (r) => <span className={r.found ? "" : "text-rose-600 dark:text-rose-400"}>{r.name}</span> },
                   { key: "date", header: "Program", value: (r) => r.date },
-                  { key: "pre", header: "fTRx 8 wk before", value: (r) => (Number.isNaN(r.pre) ? "" : r.pre), align: "right" },
-                  { key: "post", header: "fTRx 8 wk after", value: (r) => (Number.isNaN(r.post) ? "" : r.post), align: "right" },
+                  { key: "pre", header: "TRx 8 wk before", value: (r) => (Number.isNaN(r.pre) ? "" : r.pre), align: "right" },
+                  { key: "post", header: "TRx 8 wk after", value: (r) => (Number.isNaN(r.post) ? "" : r.post), align: "right" },
                   { key: "d", header: "Δ", value: (r) => (Number.isNaN(r.delta) ? "" : r.delta), align: "right", render: (r) => Number.isNaN(r.delta) ? "—" : <span className={r.delta > 0 ? "text-emerald-600 dark:text-emerald-400" : r.delta < 0 ? "text-rose-600 dark:text-rose-400" : ""}>{r.delta > 0 ? "+" : ""}{r.delta}</span> },
                   { key: "fc", header: "First call after (days)", value: (r) => (r.firstCallAfterDays === null ? "none" : r.firstCallAfterDays), align: "right" },
                 ]}

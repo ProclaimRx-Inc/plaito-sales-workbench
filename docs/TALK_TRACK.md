@@ -5,7 +5,7 @@ Numbers are from `PLAiTO_Sales_Prompt_Taxonomy.xlsx` (1,736 prompts, 20 categori
 
 ## Opening
 
-Aytu users have asked PLAiTO about 1,400 questions in production.
+Production users have asked PLAiTO about 1,400 questions in production.
 Most were not open-ended analysis.
 They were the same dozen reports asked again and again with new dates, followed by "which table did you use?" and "the numbers are incorrect".
 Each page here turns one of those repeated reports into a button: same answer every time, the definition printed next to the number, and an export.
@@ -14,7 +14,7 @@ Chat stays for the genuinely new question.
 ## Launch Pulse
 
 *What it is.* How did we do last week, and why.
-*The pain.* "How did we do last week", "fTRx since launch", "what is the most recent week of data" are the highest-frequency asks, and the follow-up "why did it move" gets a freshly written story every time.
+*The pain.* "How did we do last week", "TRx since launch", "what is the most recent week of data" are the highest-frequency asks, and the follow-up "why did it move" gets a freshly written story every time.
 *The value.* One Monday number for leadership, a five-bucket bridge (new writers, returning, up, down, went to zero) that always sums to the national change, and a freshness panel that answers "what week is the data through" before anyone asks.
 
 ## Writer Lifecycle

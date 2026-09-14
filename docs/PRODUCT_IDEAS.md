@@ -1,6 +1,6 @@
 # Product ideas from the PLAiTO Sales prompt taxonomy
 
-Source: `PLAiTO_Sales_Prompt_Taxonomy.xlsx` (SharePoint, ProclaimRx Inc › General › Claude › Claude project - Aytu Sales module exploration), 1,736 prompts in 20 categories. Thirteen categories hold prompts asked in production; seven (50 seeded prompts each) have not been asked yet.
+Source: `PLAiTO_Sales_Prompt_Taxonomy.xlsx` (SharePoint, ProclaimRx Inc › General › Claude › Claude project - Sales module exploration), 1,736 prompts in 20 categories. Thirteen categories hold prompts asked in production; seven (50 seeded prompts each) have not been asked yet.
 
 ## What the prompts actually are
 

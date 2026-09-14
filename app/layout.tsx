@@ -8,7 +8,7 @@ const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono"
 
 export const metadata: Metadata = {
   title: "PLAiTO Sales Workbench",
-  description: "Prototype: deterministic sales tools distilled from the Aytu prompt taxonomy. Synthetic data.",
+  description: "Prototype: deterministic sales tools distilled from the PLAiTO Sales prompt taxonomy. Synthetic data.",
   icons: {
     icon: [
       { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },

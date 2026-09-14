@@ -19,18 +19,18 @@ export default function PulsePage() {
 
   return (
     <>
-      <PageHeader title="Launch Pulse" description={`EXXUA national view · Rx data through ${fmtDate(h.last.week)}`} />
+      <PageHeader title="Launch Pulse" description={`Escitalopram national view · Rx data through ${fmtDate(h.last.week)}`} />
       <div className="flex-1 space-y-6 p-4 md:p-6">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-          <Kpi label="fTRx, latest week" value={fmtInt(h.last.exxTrx)} delta={h.wowPct} sub={`${fmtDelta(h.wow)} vs ${fmtWeek(h.prev.week)}`} def={trend.def} />
+          <Kpi label="TRx, latest week" value={fmtInt(h.last.brandTrx)} delta={h.wowPct} sub={`${fmtDelta(h.wow)} vs ${fmtWeek(h.prev.week)}`} def={trend.def} />
           <Kpi label="4-week average" value={fmtInt(h.avg4)} delta={h.avg4Growth} sub="vs the prior 4 weeks" def={trend.def} />
-          <Kpi label="fTRx since launch" value={fmtInt(h.sinceLaunch)} sub={`${fmtInt(h.sinceLaunchNrx)} NRx`} def={trend.def} />
+          <Kpi label="TRx since launch" value={fmtInt(h.sinceLaunch)} sub={`${fmtInt(h.sinceLaunchNrx)} NRx`} def={trend.def} />
           <Kpi label="Writers ever" value={fmtInt(h.writersEver)} sub={`${fmtInt(h.active4)} wrote in the last 4 weeks`} def={trend.def} />
           <Kpi label="New writers this week" value={fmtInt(h.last.newWriters)} sub={`${fmtInt(h.last.writers)} writers this week`} def={trend.def} />
-          <Kpi label="Best week" value={fmtInt(h.best.exxTrx)} sub={fmtWeek(h.best.week)} def={trend.def} />
+          <Kpi label="Best week" value={fmtInt(h.best.brandTrx)} sub={fmtWeek(h.best.week)} def={trend.def} />
         </div>
 
-        <Section title="Weekly fTRx since launch" description="Titration (starts) vs continuing, with distinct writers" def={trend.def}>
+        <Section title="Weekly TRx since launch" description="Starter (starts) vs continuing, with distinct writers" def={trend.def}>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={trend.rows} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
@@ -40,8 +40,8 @@ export default function PulsePage() {
                 <YAxis yAxisId="r" orientation="right" tick={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ fontSize: 12, background: "var(--popover)", border: "1px solid var(--border)", color: "var(--popover-foreground)" }} labelFormatter={(v) => fmtWeek(String(v))} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar isAnimationActive={false} yAxisId="l" dataKey="starts" name="Titration fTRx" stackId="a" fill="var(--chart-2)" />
-                <Bar isAnimationActive={false} yAxisId="l" dataKey="cont" name="Continuing fTRx" stackId="a" fill="var(--chart-1)" radius={[3, 3, 0, 0]} />
+                <Bar isAnimationActive={false} yAxisId="l" dataKey="starts" name="Starter TRx" stackId="a" fill="var(--chart-2)" />
+                <Bar isAnimationActive={false} yAxisId="l" dataKey="cont" name="Continuing TRx" stackId="a" fill="var(--chart-1)" radius={[3, 3, 0, 0]} />
                 <Line isAnimationActive={false} yAxisId="r" type="monotone" dataKey="writers" name="Writers" stroke="var(--chart-3)" strokeWidth={2} dot={false} />
               </ComposedChart>
             </ResponsiveContainer>
@@ -49,7 +49,7 @@ export default function PulsePage() {
         </Section>
 
         <div className="grid gap-6 lg:grid-cols-5">
-          <Section className="lg:col-span-2" title="Why did fTRx move this week?" description={`${fmtWeek(h.prev.week)} → ${fmtWeek(h.last.week)}: ${fmtDelta(bridgeTotal)}`} def={bridge.def}>
+          <Section className="lg:col-span-2" title="Why did TRx move this week?" description={`${fmtWeek(h.prev.week)} → ${fmtWeek(h.last.week)}: ${fmtDelta(bridgeTotal)}`} def={bridge.def}>
             <div className="space-y-2">
               {bridge.buckets.map((b) => {
                 const max = Math.max(...bridge.buckets.map((x) => Math.abs(x.delta)), 1)
@@ -70,12 +70,12 @@ export default function PulsePage() {
             </div>
           </Section>
 
-          <Section className="lg:col-span-3" title="Biggest HCP movers this week" description="Absolute change in tunits_exx, all HCPs" def={bridge.def}>
+          <Section className="lg:col-span-3" title="Biggest HCP movers this week" description="Absolute change in tunits, all HCPs" def={bridge.def}>
             <DataTable
               rows={bridge.movers}
               limit={12}
               dense
-              filename={`exxua_movers_${h.last.week}.csv`}
+              filename={`escitalopram_movers_${h.last.week}.csv`}
               rowKey={(r) => r.npi}
               columns={[
                 { key: "name", header: "HCP", value: (r) => r.name },

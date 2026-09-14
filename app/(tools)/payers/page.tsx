@@ -24,7 +24,7 @@ export default function PayersPage() {
       <PageHeader title="Payers & Copay" description="Channel mix with starts vs continuing, the Medicaid plan × week pivot, and the copay program" />
       <div className="flex-1 space-y-6 p-4 md:p-6">
         <Section
-          title="EXXUA fTRx by payer channel"
+          title="Escitalopram TRx by payer channel"
           description="The four windows the chat users asked about, side by side with one definition"
           def={split.def}
           actions={
@@ -48,23 +48,23 @@ export default function PayersPage() {
               <DataTable
                 rows={split.rows}
                 dense
-                filename={`exxua_channel_split_${win}.csv`}
+                filename={`escitalopram_channel_split_${win}.csv`}
                 rowKey={(r) => r.channel}
                 columns={[
                   { key: "c", header: "Channel", value: (r) => r.channel, render: (r) => <span className="flex items-center gap-2"><span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: COLORS[split.rows.indexOf(r) % COLORS.length] }} />{r.channel}</span> },
-                  { key: "trx", header: "fTRx", value: (r) => r.trx, align: "right", className: "font-semibold" },
+                  { key: "trx", header: "TRx", value: (r) => r.trx, align: "right", className: "font-semibold" },
                   { key: "share", header: "Share", value: (r) => fmtPct(r.share), align: "right" },
                   { key: "nrx", header: "NRx", value: (r) => r.nrx, align: "right" },
-                  { key: "starts", header: "Starts (titration)", value: (r) => r.starts, align: "right" },
+                  { key: "starts", header: "Starts (starter)", value: (r) => r.starts, align: "right" },
                   { key: "cont", header: "Continuing", value: (r) => r.cont, align: "right" },
-                  { key: "ratio", header: "Titration %", value: (r) => (r.trx ? fmtPct(r.starts / r.trx, 0) : "—"), align: "right" },
+                  { key: "ratio", header: "Starter %", value: (r) => (r.trx ? fmtPct(r.starts / r.trx, 0) : "—"), align: "right" },
                 ]}
               />
             </div>
           </div>
         </Section>
 
-        <Section title="Medicaid & Managed Medicaid plans × week" description="Plans down, week-ending dates across, EXXUA TRx in the cells" def={pivot.def}>
+        <Section title="Medicaid & Managed Medicaid plans × week" description="Plans down, week-ending dates across, Escitalopram StarterRx in the cells" def={pivot.def}>
           <div className="overflow-x-auto rounded-md border">
             <table className="w-full text-xs">
               <thead className="bg-muted/50">
@@ -96,9 +96,9 @@ export default function PayersPage() {
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
           <Kpi label="Copay claims, net" value={fmtInt(copay.totals.net)} sub={`${fmtInt(copay.totals.reversals)} reversals removed`} def={copay.def} />
-          <Kpi label="Network pharmacy share" value={fmtPct(copay.totals.networkShare, 0)} sub="is_exxua_network_pharmacy" def={copay.def} />
+          <Kpi label="Network pharmacy share" value={fmtPct(copay.totals.networkShare, 0)} sub="is_network_pharmacy" def={copay.def} />
           <Kpi label="Unique patients" value={fmtInt(copay.totals.patients)} sub={`${fmtInt(copay.totals.multiFill)} with multiple fills`} def={copay.def} />
-          <Kpi label="Titration packs" value={fmtInt(copay.totals.titration)} sub={fmtPct(copay.totals.titration / copay.totals.net, 0) + " of net claims"} def={copay.def} />
+          <Kpi label="Starter packs" value={fmtInt(copay.totals.starter)} sub={fmtPct(copay.totals.starter / copay.totals.net, 0) + " of net claims"} def={copay.def} />
           <Kpi label="Program spend" value={fmtUsd(copay.totals.spend)} sub={`${fmtUsd(copay.totals.spend / copay.totals.net)} blended per claim`} def={copay.def} />
           <Kpi label="Avg patient OOP" value={fmtUsd(copay.totals.avgOop)} sub="non-reversed claims" def={copay.def} />
         </div>
@@ -108,7 +108,7 @@ export default function PayersPage() {
             <DataTable
               rows={copay.pharmacies}
               dense
-              filename="exxua_copay_pharmacies.csv"
+              filename="escitalopram_copay_pharmacies.csv"
               rowKey={(r) => r.pharmacy}
               columns={[
                 { key: "p", header: "Pharmacy", value: (r) => r.pharmacy },

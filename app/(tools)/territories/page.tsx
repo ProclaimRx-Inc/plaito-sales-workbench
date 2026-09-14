@@ -68,7 +68,7 @@ export default function TerritoriesPage() {
 
         <Section
           title={`Scorecard, trailing ${weeks} weeks`}
-          description="MDD market TRx, EXXUA fTRx with payer split, writers, calls, target coverage and QTD goal. Click a row for detail."
+          description="MDD market TRx, Escitalopram TRx with payer split, writers, calls, target coverage and QTD goal. Click a row for detail."
           def={sc.def}
           actions={
             <Tabs value={String(weeks)} onValueChange={(v) => setWeeks(Number(v) as 13 | 26)}>
@@ -89,7 +89,7 @@ export default function TerritoriesPage() {
               { key: "region", header: "Region", value: (r) => r.region },
               { key: "rep", header: "Sales Specialist", value: (r) => r.rep, render: (r) => <span className={cn(r.vacant && "text-amber-600 dark:text-amber-400")}>{r.rep}</span> },
               { key: "mkt", header: "MDD mkt TRx", value: (r) => r.mktTrx13, align: "right" },
-              { key: "exx", header: "EXXUA fTRx", value: (r) => r.exxTrx13, align: "right", className: "font-semibold" },
+              { key: "brand", header: "Escitalopram TRx", value: (r) => r.brandTrx13, align: "right", className: "font-semibold" },
               { key: "share", header: "Share", value: (r) => fmtPct(r.share13, 2), align: "right" },
               { key: "com", header: "Commercial", value: (r) => r.channel13.Commercial, align: "right" },
               { key: "caid", header: "Medicaid", value: (r) => r.channel13.Medicaid, align: "right" },
@@ -125,7 +125,7 @@ function TerritoryDetail({ row }: { row: TerritoryRow }) {
       </SheetHeader>
       <div className="space-y-5 px-4 pb-6">
         <div>
-          <div className="mb-1 text-xs font-medium text-muted-foreground">Weekly EXXUA fTRx since launch</div>
+          <div className="mb-1 text-xs font-medium text-muted-foreground">Weekly Escitalopram TRx since launch</div>
           <div className="h-40">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={trend} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
@@ -133,7 +133,7 @@ function TerritoryDetail({ row }: { row: TerritoryRow }) {
                 <XAxis dataKey="week" tickFormatter={(v: string) => v.slice(5)} tick={{ fontSize: 10 }} interval={5} />
                 <YAxis tick={{ fontSize: 10 }} />
                 <Tooltip contentStyle={{ fontSize: 12, background: "var(--popover)", border: "1px solid var(--border)", color: "var(--popover-foreground)" }} labelFormatter={(v) => fmtWeek(String(v))} />
-                <Area isAnimationActive={false} type="monotone" dataKey="exxTrx" name="EXXUA fTRx" stroke="var(--chart-1)" fill="var(--chart-1)" fillOpacity={0.2} />
+                <Area isAnimationActive={false} type="monotone" dataKey="brandTrx" name="Escitalopram TRx" stroke="var(--chart-1)" fill="var(--chart-1)" fillOpacity={0.2} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -148,7 +148,7 @@ function TerritoryDetail({ row }: { row: TerritoryRow }) {
               { key: "name", header: "HCP", value: (r) => r.name },
               { key: "spec", header: "Specialty", value: (r) => r.specialty },
               { key: "tier", header: "Priority", value: (r) => r.tier ?? "", render: (r) => <TierBadge tier={r.tier} /> },
-              { key: "exx", header: "fTRx", value: (r) => r.exx, align: "right" },
+              { key: "brand", header: "TRx", value: (r) => r.brand, align: "right" },
               { key: "mkt", header: "MDD TRx", value: (r) => r.mkt, align: "right" },
             ]}
           />

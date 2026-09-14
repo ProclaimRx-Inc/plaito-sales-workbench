@@ -5,7 +5,7 @@ export type NavItem = { href: string; label: string; icon: LucideIcon; blurb: st
 
 export const TOOLS: NavItem[] = [
   { href: "/pulse", label: "Launch Pulse", icon: Activity, blurb: "How did we do last week, and why", categories: ["Rx Performance & Trends", "Launch Performance & Readiness", "Business Drivers & Anomaly Detection"] },
-  { href: "/writers", label: "Writer Lifecycle", icon: Users, blurb: "New, repeat, at-risk and lapsed EXXUA writers", categories: ["HCP / Prescriber Analysis", "HCP Adoption, Retention & Lapse"] },
+  { href: "/writers", label: "Writer Lifecycle", icon: Users, blurb: "New, repeat, at-risk and lapsed Escitalopram writers", categories: ["HCP / Prescriber Analysis", "HCP Adoption, Retention & Lapse"] },
   { href: "/territories", label: "Territory Scorecard", icon: Map, blurb: "Alignment, payer split, coverage and ZIP lookup", categories: ["Territory & Rep Performance", "Sales Goal & Attainment"] },
   { href: "/opportunities", label: "HCP Opportunities", icon: Target, blurb: "Value × potential quadrants and next best action", categories: ["HCP Targeting & White Space", "HCP Segmentation & Prioritization", "Opportunity & Next-Best-Action", "Market & Competitive Intelligence"] },
   { href: "/engagement", label: "Engagement → Rx", icon: Radio, blurb: "Target coverage, calls before first Rx, event pre/post", categories: ["Call Activity & Field Engagement", "Promotional Effectiveness", "Digital & Omnichannel Engagement"] },

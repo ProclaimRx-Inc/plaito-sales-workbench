@@ -38,7 +38,7 @@ White Space is its own row and never leaks into a territory.
 *What it is.* Every HCP scored and placed in one of four quadrants, with a next best action.
 *The pain.* The biggest category by volume.
 The white-space look-alike list was asked six different ways and produced six different models and six different lists.
-Users kept asking whether buspirone or Auvelity writers are more likely to adopt.
+Users kept asking whether calmorin or Novaryn writers are more likely to adopt.
 *The value.* The score formula is printed on the page and the weights are editable.
 Next best action is a rule table with the reason in plain English, so a rep can see why an HCP is on the list.
 The export is a call list.
@@ -54,7 +54,7 @@ A paste box for NPI plus date that runs the same eight-week pre/post every time,
 ## Payers & Copay
 
 *What it is.* Channel mix, the Medicaid plan by week pivot, and the copay program.
-*The pain.* The Commercial / Medicaid / Medicare / TriCare split with starts versus continuing was asked for four windows in a row.
+*The pain.* The Commercial / Medicaid / Medicare / TriCare split by strength was asked for four windows in a row.
 The "plans as rows, weeks as columns" pivot was requested three times.
 Copay questions all hinge on net of reversals and network versus retail.
 *The value.* One channel definition with a window switcher.

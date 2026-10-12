@@ -74,7 +74,7 @@ export default function WritersPage() {
               { key: "spec", header: "Specialty", value: (r) => r.specialty },
               { key: "tier", header: "Priority", value: (r) => r.tier ?? "Untargeted", render: (r) => <TierBadge tier={r.tier} /> },
               { key: "tunits", header: "tunits", value: (r) => r.tunits, align: "right" },
-              { key: "starts", header: "Starter", value: (r) => r.starts, align: "right" },
+              { key: "mg5", header: "5 mg", value: (r) => r.mg5, align: "right" },
               { key: "channel", header: "Payer of first scripts", value: (r) => r.channel },
               { key: "calls", header: "In-person calls before", value: (r) => r.callsBeforeFirst, align: "right" },
             ]}

@@ -58,7 +58,7 @@ const pctRank = (xs: number[]) => {
 }
 
 // ---- weekly trend ---------------------------------------------------------------
-export type TrendRow = { week: string; weekIndex: number; brandTrx: number; brandNrx: number; starts: number; cont: number; writers: number; newWriters: number; holiday?: string }
+export type TrendRow = { week: string; weekIndex: number; brandTrx: number; brandNrx: number; mg5: number; mg10: number; writers: number; newWriters: number; holiday?: string }
 
 export function weeklyTrend(): { rows: TrendRow[]; def: Definition } {
   const data = d()
@@ -66,12 +66,12 @@ export function weeklyTrend(): { rows: TrendRow[]; def: Definition } {
   const rows: TrendRow[] = []
   for (const w of data.weeks.slice(data.launchWeekIndex)) {
     const rs = rxByWeek.get(w.index) ?? []
-    let brand = 0, nrx = 0, starts = 0, cont = 0, writers = 0, nw = 0
+    let brand = 0, nrx = 0, mg5 = 0, mg10 = 0, writers = 0, nw = 0
     for (const r of rs) {
-      brand += r.brandTrx; nrx += r.brandNrx; starts += r.brandStarts; cont += r.brandCont
+      brand += r.brandTrx; nrx += r.brandNrx; mg5 += r.brand5mg; mg10 += r.brand10mg
       if (r.brandTrx > 0) { writers++; if (firstWriteWeek.get(r.npi) === w.index) nw++ }
     }
-    rows.push({ week: w.end, weekIndex: w.index, brandTrx: brand, brandNrx: nrx, starts, cont, writers, newWriters: nw, holiday: w.holiday })
+    rows.push({ week: w.end, weekIndex: w.index, brandTrx: brand, brandNrx: nrx, mg5, mg10, writers, newWriters: nw, holiday: w.holiday })
   }
   return {
     rows,
@@ -208,7 +208,7 @@ export function newWriterReport(weekIndex: number) {
     .filter((r) => r.firstWeek === weekIndex)
     .map((r) => {
       const wk = (rxByWeek.get(weekIndex) ?? []).find((x) => x.npi === r.npi)!
-      return { ...r, tunits: wk.brandTrx, starts: wk.brandStarts, channel: (Object.keys(wk.channel) as PayerChannel[]).filter((c) => wk.channel[c] > 0).map((c) => `${c} ${wk.channel[c]}`).join(", ") }
+      return { ...r, tunits: wk.brandTrx, mg5: wk.brand5mg, channel: (Object.keys(wk.channel) as PayerChannel[]).filter((c) => wk.channel[c] > 0).map((c) => `${c} ${wk.channel[c]}`).join(", ") }
     })
     .sort((a, b) => a.territoryCode.localeCompare(b.territoryCode) || b.tunits - a.tunits)
   void firstWriteWeek
@@ -217,7 +217,7 @@ export function newWriterReport(weekIndex: number) {
     sources: ["fact_rx_hcp_weekly", "dim_zip_territory_alignment", "dim_hcp_target_list", "fact_crm_calls"],
     window: `Single week ending ${data.weeks[weekIndex].end}; history back to launch for the 'never before' test`,
     filters: ["tunits > 0 in this week", "tunits = 0 in every prior week", "Territory from current ZIP alignment (end_date = current)", "Tier from the target list active this quarter"],
-    formula: "One row per NPI; columns fixed: territory number, territory name, region, NPI, HCP, specialty, priority, tunits this week, starter tunits, payer channel of the first-week scripts, in-person calls before this week",
+    formula: "One row per NPI; columns fixed: territory number, territory name, region, NPI, HCP, specialty, priority, tunits this week, 5 mg tunits, payer channel of the first-week scripts, in-person calls before this week",
     notes: ["This is the report the sales-ops team asked for by hand every Monday, with the same columns every time."],
   }
   return { rows, def }
@@ -354,7 +354,7 @@ export function territoryTopHcps(code: string, n = 10) {
 export type Quadrant = "Grow" | "Defend" | "Convert" | "Deprioritize"
 export type OpportunityRow = {
   npi: string; name: string; specialty: string; tier: Tier; territoryCode: string; territory: string; whiteSpace: boolean; state: string; city: string
-  brand13: number; mkt13: number; branded13: number; buspirone13: number; auvelity13: number; share13: number
+  brand13: number; mkt13: number; branded13: number; calmorin13: number; novaryn13: number; share13: number
   potential: number; current: number; quadrant: Quadrant; status: "Writer" | "Lapsed writer" | "Non-writer"
   calls13: number; weeksSinceCall: number | null; emailsOpened13: number; action: string; reason: string
 }
@@ -367,7 +367,7 @@ export function hcpOpportunity(): { rows: OpportunityRow[]; medians: { potential
   for (const r of data.rx) {
     if (r.weekIndex < from) continue
     const v = acc.get(r.npi) ?? { brand: 0, mkt: 0, br: 0, bu: 0, au: 0 }
-    v.brand += r.brandTrx; v.mkt += r.mktTrx; v.br += r.mktBranded; v.bu += r.buspirone; v.au += r.auvelity
+    v.brand += r.brandTrx; v.mkt += r.mktTrx; v.br += r.mktBranded; v.bu += r.calmorin; v.au += r.novaryn
     acc.set(r.npi, v)
   }
   const calls13 = new Map<string, number>()
@@ -410,13 +410,13 @@ export function hcpOpportunity(): { rows: OpportunityRow[]; medians: { potential
     if (t.whiteSpace && hiPot) { action = "Flag for alignment review"; reason = "High-potential HCP sits in White Space; no rep can call" }
     else if (quadrant === "Convert" && c13 === 0) { action = "Schedule first call"; reason = `Top-half market volume (${v.mkt} MDD TRx / 13 wk), no Trivaxa, zero calls in 13 weeks` }
     else if (quadrant === "Convert" && status === "Lapsed writer") { action = "Re-engage lapsed writer"; reason = `Wrote Trivaxa before, none in ${s === "Lapsed" ? "8+" : "4–7"} weeks; market volume still high` }
-    else if (quadrant === "Convert") { action = "Add copay/starter detail"; reason = `Called ${c13}× in 13 weeks but no Trivaxa; ${v.bu > 0 ? "buspirone writer" : "branded writer"} profile matches current Trivaxa writers` }
+    else if (quadrant === "Convert") { action = "Add copay/dosing detail"; reason = `Called ${c13}× in 13 weeks but no Trivaxa; ${v.bu > 0 ? "calmorin writer" : "branded writer"} profile matches current Trivaxa writers` }
     else if (quadrant === "Grow") { action = "Maintain frequency"; reason = `Writing ${v.brand} TRx / 13 wk with share ${((v.brand / Math.max(1, v.mkt)) * 100).toFixed(1)}% of a large market` }
     else if (quadrant === "Defend") { action = "Protect: check access"; reason = "Writing Trivaxa but small total market; watch for lapse" }
     else { action = "Deprioritize"; reason = "Bottom-half market volume and no Trivaxa activity" }
     return {
       npi: h.npi, name: hcpName(h), specialty: h.specialty, tier: h.tier, territoryCode: t.code, territory: t.name, whiteSpace: !!t.whiteSpace, state: h.state, city: h.city,
-      brand13: v.brand, mkt13: v.mkt, branded13: v.br, buspirone13: v.bu, auvelity13: v.au, share13: v.mkt ? v.brand / v.mkt : 0,
+      brand13: v.brand, mkt13: v.mkt, branded13: v.br, calmorin13: v.bu, novaryn13: v.au, share13: v.mkt ? v.brand / v.mkt : 0,
       potential, current, quadrant, status, calls13: c13, weeksSinceCall, emailsOpened13: opened13.get(h.npi) ?? 0, action, reason,
     }
   })
@@ -429,7 +429,7 @@ export function hcpOpportunity(): { rows: OpportunityRow[]; medians: { potential
       sources: ["fact_rx_hcp_weekly", "fact_crm_calls", "fact_field_emails", "dim_zip_territory_alignment", "dim_hcp_target_list"],
       window: `Trailing 13 weeks ending w/e ${data.latestWeek.end}`,
       filters: ["All HCPs in the HCP master, including White Space"],
-      formula: "Potential = 0.50·pct-rank(MDD market TRx) + 0.25·pct-rank(branded MDD TRx) + 0.15·pct-rank(buspirone TRx) + 0.10·pct-rank(Auvelity TRx). Current = Trivaxa TRx. Quadrants split at the median potential and the median non-zero TRx.",
+      formula: "Potential = 0.50·pct-rank(MDD market TRx) + 0.25·pct-rank(branded MDD TRx) + 0.15·pct-rank(calmorin TRx) + 0.10·pct-rank(Novaryn TRx). Current = Trivaxa TRx. Quadrants split at the median potential and the median non-zero TRx.",
       notes: [
         "The weights are a starting point, deliberately simple and visible; the chat users asked for this correlation-based look-alike list at least six different ways and got a different answer each time.",
         "Next-best-action is rule-based text, not a model, so a rep can read exactly why an HCP is on the list.",
@@ -553,25 +553,25 @@ function windowWeeks(key: WindowKey): Set<number> {
 export function channelSplit(key: WindowKey) {
   const data = d()
   const weeks = windowWeeks(key)
-  const acc: Record<PayerChannel, { trx: number; starts: number; cont: number; nrx: number }> = Object.fromEntries(CHANNELS.map((c) => [c, { trx: 0, starts: 0, cont: 0, nrx: 0 }])) as never
+  const acc: Record<PayerChannel, { trx: number; mg5: number; mg10: number; nrx: number }> = Object.fromEntries(CHANNELS.map((c) => [c, { trx: 0, mg5: 0, mg10: 0, nrx: 0 }])) as never
   for (const r of data.rx) {
     if (!weeks.has(r.weekIndex) || r.brandTrx === 0) continue
     for (const c of CHANNELS) {
       const n = r.channel[c]
       if (!n) continue
       const f = n / r.brandTrx
-      acc[c].trx += n; acc[c].starts += r.brandStarts * f; acc[c].cont += r.brandCont * f; acc[c].nrx += r.brandNrx * f
+      acc[c].trx += n; acc[c].mg5 += r.brand5mg * f; acc[c].mg10 += r.brand10mg * f; acc[c].nrx += r.brandNrx * f
     }
   }
   const total = sum(CHANNELS.map((c) => acc[c].trx))
-  const rows = CHANNELS.map((c) => ({ channel: c, trx: acc[c].trx, share: total ? acc[c].trx / total : 0, starts: Math.round(acc[c].starts), cont: Math.round(acc[c].cont), nrx: Math.round(acc[c].nrx) }))
+  const rows = CHANNELS.map((c) => ({ channel: c, trx: acc[c].trx, share: total ? acc[c].trx / total : 0, mg5: Math.round(acc[c].mg5), mg10: Math.round(acc[c].mg10), nrx: Math.round(acc[c].nrx) }))
   const ws = [...weeks].sort((a, b) => a - b)
   const def: Definition = {
     title: `Trivaxa TRx by payer channel — ${WINDOW_LABEL[key]}`,
     sources: ["fact_rx_hcp_weekly"],
     window: `w/e ${data.weeks[ws[0]].end} through w/e ${data.weeks[ws[ws.length - 1]].end} (${ws.length} weeks)`,
     filters: ["Payment type collapsed to Commercial / Medicaid / Medicare / TriCare / Cash"],
-    formula: "starts = starter-pack tunits; continuing = all other tunits; NRx allocated to channels pro rata within each HCP-week",
+    formula: "5 mg = tunits of the 5 mg SKU; 10 mg = tunits of the 10 mg SKU; NRx allocated to channels pro rata within each HCP-week",
   }
   return { rows, total, def }
 }
@@ -613,7 +613,7 @@ export function copaySummary() {
   }
   const pharmacies = [...byPharmacy.entries()].map(([pharmacy, v]) => ({ pharmacy, network: v.network, claims: v.claims, blended: v.copay / v.claims, avgOop: v.oop / v.claims, spend: v.copay })).sort((a, b) => b.claims - a.claims)
   const weekly = data.weeks.slice(data.launchWeekIndex).map((w) => ({ week: w.end, net: net.filter((c) => c.weekIndex === w.index).length, reversals: claims.filter((c) => c.weekIndex === w.index && c.reversal).length }))
-  const starter = net.filter((c) => c.product === "Trivaxa Starter").length
+  const mg5 = net.filter((c) => c.product === "Trivaxa 5 mg").length
   const def: Definition = {
     title: "Trivaxa copay program summary",
     sources: ["fact_copay_claims"],
@@ -621,7 +621,7 @@ export function copaySummary() {
     filters: ["Net of reversals unless labelled otherwise", "Network = is_network_pharmacy = 1", "Patients counted on claim_broad_member_id"],
     formula: "blended copay rate = program copay $ / non-reversed transactions per pharmacy",
   }
-  return { totals: { claims: claims.length, net: net.length, reversals, network, networkShare: network / net.length, patients, multiFill, starter, spend: sum(net.map((c) => c.copay)), avgOop: sum(net.map((c) => c.oop)) / net.length }, pharmacies, weekly, def }
+  return { totals: { claims: claims.length, net: net.length, reversals, network, networkShare: network / net.length, patients, multiFill, mg5, spend: sum(net.map((c) => c.copay)), avgOop: sum(net.map((c) => c.oop)) / net.length }, pharmacies, weekly, def }
 }
 
 /** Number of Sat–Fri true weeks (Friday week-ends) that fall inside a calendar quarter. */

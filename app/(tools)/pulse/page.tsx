@@ -30,7 +30,7 @@ export default function PulsePage() {
           <Kpi label="Best week" value={fmtInt(h.best.brandTrx)} sub={fmtWeek(h.best.week)} def={trend.def} />
         </div>
 
-        <Section title="Weekly TRx since launch" description="Starter (starts) vs continuing, with distinct writers" def={trend.def}>
+        <Section title="Weekly TRx since launch" description="Trivaxa 5 mg vs 10 mg, with distinct writers" def={trend.def}>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={trend.rows} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
@@ -40,8 +40,8 @@ export default function PulsePage() {
                 <YAxis yAxisId="r" orientation="right" tick={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ fontSize: 12, background: "var(--popover)", border: "1px solid var(--border)", color: "var(--popover-foreground)" }} labelFormatter={(v) => fmtWeek(String(v))} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar isAnimationActive={false} yAxisId="l" dataKey="starts" name="Starter TRx" stackId="a" fill="var(--chart-2)" />
-                <Bar isAnimationActive={false} yAxisId="l" dataKey="cont" name="Continuing TRx" stackId="a" fill="var(--chart-1)" radius={[3, 3, 0, 0]} />
+                <Bar isAnimationActive={false} yAxisId="l" dataKey="mg5" name="5 mg TRx" stackId="a" fill="var(--chart-2)" />
+                <Bar isAnimationActive={false} yAxisId="l" dataKey="mg10" name="10 mg TRx" stackId="a" fill="var(--chart-1)" radius={[3, 3, 0, 0]} />
                 <Line isAnimationActive={false} yAxisId="r" type="monotone" dataKey="writers" name="Writers" stroke="var(--chart-3)" strokeWidth={2} dot={false} />
               </ComposedChart>
             </ResponsiveContainer>

@@ -72,14 +72,14 @@ export type RxWeek = {
   /** Trivaxa TRx (tunits) */
   brandTrx: number
   brandNrx: number
-  brandStarts: number // starter pack
-  brandCont: number // continuing
+  brand5mg: number // Trivaxa 5 mg SKU
+  brand10mg: number // Trivaxa 10 mg SKU
   /** MDD market TRx for this HCP-week */
   mktTrx: number
   mktBranded: number
-  buspirone: number
-  auvelity: number
-  trintellix: number
+  calmorin: number
+  novaryn: number
+  zelvexa: number
   channel: Record<PayerChannel, number>
 }
 
@@ -114,7 +114,7 @@ export type CopayClaim = {
   pharmacyState: string
   network: boolean
   reversal: boolean
-  product: "Trivaxa 10 mg" | "Trivaxa Starter"
+  product: "Trivaxa 5 mg" | "Trivaxa 10 mg"
   copay: number
   oop: number
   channel: PayerChannel

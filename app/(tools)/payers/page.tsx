@@ -21,7 +21,7 @@ export default function PayersPage() {
 
   return (
     <>
-      <PageHeader title="Payers & Copay" description="Channel mix with starts vs continuing, the Medicaid plan × week pivot, and the copay program" />
+      <PageHeader title="Payers & Copay" description="Channel mix by strength (5 mg vs 10 mg), the Medicaid plan × week pivot, and the copay program" />
       <div className="flex-1 space-y-6 p-4 md:p-6">
         <Section
           title="Trivaxa TRx by payer channel"
@@ -55,9 +55,9 @@ export default function PayersPage() {
                   { key: "trx", header: "TRx", value: (r) => r.trx, align: "right", className: "font-semibold" },
                   { key: "share", header: "Share", value: (r) => fmtPct(r.share), align: "right" },
                   { key: "nrx", header: "NRx", value: (r) => r.nrx, align: "right" },
-                  { key: "starts", header: "Starts (starter)", value: (r) => r.starts, align: "right" },
-                  { key: "cont", header: "Continuing", value: (r) => r.cont, align: "right" },
-                  { key: "ratio", header: "Starter %", value: (r) => (r.trx ? fmtPct(r.starts / r.trx, 0) : "—"), align: "right" },
+                  { key: "mg5", header: "5 mg", value: (r) => r.mg5, align: "right" },
+                  { key: "mg10", header: "10 mg", value: (r) => r.mg10, align: "right" },
+                  { key: "ratio", header: "5 mg %", value: (r) => (r.trx ? fmtPct(r.mg5 / r.trx, 0) : "—"), align: "right" },
                 ]}
               />
             </div>
@@ -98,7 +98,7 @@ export default function PayersPage() {
           <Kpi label="Copay claims, net" value={fmtInt(copay.totals.net)} sub={`${fmtInt(copay.totals.reversals)} reversals removed`} def={copay.def} />
           <Kpi label="Network pharmacy share" value={fmtPct(copay.totals.networkShare, 0)} sub="is_network_pharmacy" def={copay.def} />
           <Kpi label="Unique patients" value={fmtInt(copay.totals.patients)} sub={`${fmtInt(copay.totals.multiFill)} with multiple fills`} def={copay.def} />
-          <Kpi label="Starter packs" value={fmtInt(copay.totals.starter)} sub={fmtPct(copay.totals.starter / copay.totals.net, 0) + " of net claims"} def={copay.def} />
+          <Kpi label="5 mg claims" value={fmtInt(copay.totals.mg5)} sub={fmtPct(copay.totals.mg5 / copay.totals.net, 0) + " of net claims"} def={copay.def} />
           <Kpi label="Program spend" value={fmtUsd(copay.totals.spend)} sub={`${fmtUsd(copay.totals.spend / copay.totals.net)} blended per claim`} def={copay.def} />
           <Kpi label="Avg patient OOP" value={fmtUsd(copay.totals.avgOop)} sub="non-reversed claims" def={copay.def} />
         </div>

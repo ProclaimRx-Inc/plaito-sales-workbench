@@ -78,10 +78,10 @@ export default function OpportunitiesPage() {
           </Section>
           <Section className="lg:col-span-3" title="How the score works" description="Deliberately simple and printed on the page" def={opp.def}>
             <div className="space-y-3 text-sm">
-              <p className="whitespace-normal break-words rounded-md bg-muted p-3 font-mono text-[12px]">potential = 0.50 · rank(MDD market TRx) + 0.25 · rank(branded MDD TRx) + 0.15 · rank(buspirone TRx) + 0.10 · rank(Auvelity TRx)</p>
+              <p className="whitespace-normal break-words rounded-md bg-muted p-3 font-mono text-[12px]">potential = 0.50 · rank(MDD market TRx) + 0.25 · rank(branded MDD TRx) + 0.15 · rank(calmorin TRx) + 0.10 · rank(Novaryn TRx)</p>
               <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
                 <li>Ranks are percentile ranks across every HCP in the master over the trailing 13 weeks, so the score is stable week to week.</li>
-                <li>Buspirone and Auvelity are in because the chat users asked, repeatedly, whether those writers were more likely to adopt Trivaxa. Here the weights are explicit and editable rather than rediscovered by an LLM each time.</li>
+                <li>Calmorin and Novaryn are in because the chat users asked, repeatedly, whether those writers were more likely to adopt Trivaxa. Here the weights are explicit and editable rather than rediscovered by an LLM each time.</li>
                 <li>Quadrants split at the median potential and the median non-zero TRx (currently {opp.medians.potential.toFixed(2)} and {fmtInt(opp.medians.current)}).</li>
                 <li>The action column is a small rule table: white space + high potential → alignment review; convert + zero calls → first call; lapsed writer → re-engage; and so on.</li>
               </ul>
@@ -106,7 +106,7 @@ export default function OpportunitiesPage() {
               { key: "status", header: "Status", value: (r) => r.status },
               { key: "pot", header: "Potential", value: (r) => r.potential.toFixed(2), align: "right" },
               { key: "mkt", header: "MDD TRx", value: (r) => r.mkt13, align: "right" },
-              { key: "busp", header: "Buspirone", value: (r) => r.buspirone13, align: "right" },
+              { key: "busp", header: "Calmorin", value: (r) => r.calmorin13, align: "right" },
               { key: "brand", header: "Trivaxa TRx", value: (r) => r.brand13, align: "right" },
               { key: "share", header: "Share", value: (r) => fmtPct(r.share13), align: "right" },
               { key: "calls", header: "Calls 13 wk", value: (r) => r.calls13, align: "right" },

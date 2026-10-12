@@ -111,7 +111,7 @@ const PHARMACIES: { name: string; network: boolean }[] = [
   { name: "Kroger Pharmacy", network: false },
 ]
 
-const EMAIL_TEMPLATES = ["Trivaxa Efficacy Overview", "Starter Made Simple", "Copay Savings Program", "Sexual Function Data", "Weight Neutrality", "Patient Case: First-Line Switch", "Speaker Program Invite"]
+const EMAIL_TEMPLATES = ["Trivaxa Efficacy Overview", "Dosing Made Simple", "Copay Savings Program", "Sexual Function Data", "Weight Neutrality", "Patient Case: First-Line Switch", "Speaker Program Invite"]
 
 const MCO = ["Centene", "UnitedHealth Group", "Molina", "Elevance", "CVS Health (Aetna)", "State FFS"]
 
@@ -221,20 +221,20 @@ export function generate(): Dataset {
     const adoptP = 0.02 * h.propensity * repFactor * tierFactor // per-week hazard after launch
     const medicaidSkew = medicaidHeavy.has(h.state) ? 0.34 : 0.18
     const chanW: Record<PayerChannel, number> = { Commercial: 0.5 - medicaidSkew / 2, Medicaid: medicaidSkew, Medicare: 0.2, TriCare: 0.03, Cash: 0.05 }
-    const buspAff = r.chance(0.5 + h.propensity * 0.3)
+    const calmAff = r.chance(0.5 + h.propensity * 0.3)
     for (const w of weeks) {
       const seasonal = 1 + 0.05 * Math.sin((w.index / 52) * Math.PI * 2)
       const mkt = Math.max(0, Math.round(mktBase * seasonal * (0.7 + r.next() * 0.6)))
       const branded = Math.round(mkt * (0.12 + h.propensity * 0.1) * (0.6 + r.next() * 0.8))
-      const busp = buspAff ? Math.round(mkt * 0.12 * (0.5 + r.next())) : Math.round(mkt * 0.02 * r.next())
+      const busp = calmAff ? Math.round(mkt * 0.12 * (0.5 + r.next())) : Math.round(mkt * 0.02 * r.next())
       const auv = Math.round(branded * (0.25 + r.next() * 0.3))
       const trin = Math.round(branded * (0.15 + r.next() * 0.2))
-      let brand = 0, nrx = 0, starts = 0, cont = 0
+      let brand = 0, nrx = 0, mg5 = 0, mg10 = 0
       if (w.index >= launchWeekIndex) {
         const adopted = adoptionWeek.get(h.npi)
         if (adopted === undefined) {
           const ramp = Math.min(1, (w.index - launchWeekIndex + 4) / 20)
-          if (r.chance(adoptP * ramp * 1.8)) { adoptionWeek.set(h.npi, w.index); brand = r.int(1, 2); nrx = brand; starts = brand }
+          if (r.chance(adoptP * ramp * 1.8)) { adoptionWeek.set(h.npi, w.index); brand = r.int(1, 2); nrx = brand; mg5 = brand }
         } else {
           const since = w.index - adopted
           const lapsed = lapsedAt.get(h.npi)
@@ -244,10 +244,10 @@ export function generate(): Dataset {
             const mean = (0.5 + h.propensity * 3.2 * tierFactor) * Math.min(1, since / 8 + 0.4)
             const n = Math.max(0, Math.round(r.normal(mean, Math.max(0.6, mean * 0.55))))
             brand = n
-            starts = Math.round(n * Math.max(0.25, 0.75 - since * 0.02) * (0.7 + r.next() * 0.6))
-            starts = Math.min(brand, starts)
-            cont = brand - starts
-            nrx = Math.min(brand, starts + Math.round(cont * 0.15))
+            mg5 = Math.round(n * Math.max(0.25, 0.75 - since * 0.02) * (0.7 + r.next() * 0.6))
+            mg5 = Math.min(brand, mg5)
+            mg10 = brand - mg5
+            nrx = Math.min(brand, mg5 + Math.round(mg10 * 0.15))
           }
         }
       }
@@ -257,7 +257,7 @@ export function generate(): Dataset {
         let acc = 0
         for (const c of Object.keys(chanW) as PayerChannel[]) { acc += chanW[c]; if (x <= acc) { channel[c]++; break } }
       }
-      rx.push({ npi: h.npi, weekIndex: w.index, brandTrx: brand, brandNrx: nrx, brandStarts: starts, brandCont: cont, mktTrx: mkt, mktBranded: branded, buspirone: busp, auvelity: auv, trintellix: trin, channel })
+      rx.push({ npi: h.npi, weekIndex: w.index, brandTrx: brand, brandNrx: nrx, brand5mg: mg5, brand10mg: mg10, mktTrx: mkt, mktBranded: branded, calmorin: busp, novaryn: auv, zelvexa: trin, channel })
     }
   }
 
@@ -289,7 +289,7 @@ export function generate(): Dataset {
         const h = weightedPick(pool)
         const dow = r.int(0, 4) // Mon..Fri
         const date = addDays(w.end, -(4 - dow))
-        calls.push({ id: `C${++callN}`, npi: h.npi, repId: rep.id, date, weekIndex: w.index, type: pickCallType(), products: r.chance(0.3) ? ["Trivaxa", "Vilazodone"] : ["Trivaxa"] })
+        calls.push({ id: `C${++callN}`, npi: h.npi, repId: rep.id, date, weekIndex: w.index, type: pickCallType(), products: r.chance(0.3) ? ["Trivaxa", "Pelivra"] : ["Trivaxa"] })
       }
     }
   }
@@ -322,14 +322,14 @@ export function generate(): Dataset {
     for (let k = 0; k < eligible; k++) {
       if (!r.chance(0.72)) continue
       const ph = r.pick(PHARMACIES)
-      const isStart = k < row.brandStarts
+      const is5mg = k < row.brand5mg
       const list = members.get(h.npi) ?? []
       let member: string
-      if (list.length > 0 && !isStart && r.chance(0.7)) member = r.pick(list)
+      if (list.length > 0 && !is5mg && r.chance(0.7)) member = r.pick(list)
       else { member = `P${String(r.int(100000, 999999))}`; list.push(member); members.set(h.npi, list) }
       copay.push({
         id: `T${++claimN}`, npi: h.npi, weekIndex: row.weekIndex, pharmacy: ph.name, pharmacyState: h.state, network: ph.network,
-        reversal: r.chance(0.045), product: isStart ? "Trivaxa Starter" : "Trivaxa 10 mg", copay: ph.network ? r.int(180, 260) : r.int(240, 420), oop: ph.network ? 0 : r.pick([0, 0, 10, 25, 35]),
+        reversal: r.chance(0.045), product: is5mg ? "Trivaxa 5 mg" : "Trivaxa 10 mg", copay: ph.network ? r.int(180, 260) : r.int(240, 420), oop: ph.network ? 0 : r.pick([0, 0, 10, 25, 35]),
         channel: r.chance(0.9) ? "Commercial" : "Cash", memberId: member,
       })
     }

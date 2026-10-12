@@ -76,7 +76,7 @@ export function weeklyTrend(): { rows: TrendRow[]; def: Definition } {
   return {
     rows,
     def: {
-      title: "Weekly Escitalopram TRx since launch",
+      title: "Weekly Trivaxa TRx since launch",
       sources: ["fact_rx_hcp_weekly"],
       window: `Launch week (w/e ${data.weeks[data.launchWeekIndex].end}) through latest loaded week (w/e ${data.latestWeek.end})`,
       filters: ["All HCPs, including White Space", "Sat–Fri true weeks"],
@@ -190,7 +190,7 @@ export function writerLifecycle(asOf = d().latestWeek.index): { rows: WriterRow[
     rows,
     counts,
     def: {
-      title: "Escitalopram writer lifecycle segments",
+      title: "Trivaxa writer lifecycle segments",
       sources: ["fact_rx_hcp_weekly", "fact_crm_calls"],
       window: `Launch through w/e ${data.weeks[asOf].end}`,
       filters: ["HCPs with at least one week of tunits > 0"],
@@ -213,7 +213,7 @@ export function newWriterReport(weekIndex: number) {
     .sort((a, b) => a.territoryCode.localeCompare(b.territoryCode) || b.tunits - a.tunits)
   void firstWriteWeek
   const def: Definition = {
-    title: `New Escitalopram prescribers, w/e ${data.weeks[weekIndex].end}`,
+    title: `New Trivaxa prescribers, w/e ${data.weeks[weekIndex].end}`,
     sources: ["fact_rx_hcp_weekly", "dim_zip_territory_alignment", "dim_hcp_target_list", "fact_crm_calls"],
     window: `Single week ending ${data.weeks[weekIndex].end}; history back to launch for the 'never before' test`,
     filters: ["tunits > 0 in this week", "tunits = 0 in every prior week", "Territory from current ZIP alignment (end_date = current)", "Tier from the target list active this quarter"],
@@ -309,7 +309,7 @@ export function territoryScorecard(weeks = 13): { rows: TerritoryRow[]; def: Def
       sources: ["fact_rx_hcp_weekly", "dim_zip_territory_alignment", "dim_sales_rep_roster", "dim_hcp_target_list", "fact_crm_calls"],
       window: `${weeks} weeks ending w/e ${data.latestWeek.end}; goal attainment is quarter-to-date for ${q}`,
       filters: ["Current alignment only (dim_zip_territory_alignment.end_date = current)", "Active roster rows only", "White Space shown as its own row, never mixed into a territory"],
-      formula: "MDD market TRx = SUM(trx_mkt_total); Escitalopram TRx = SUM(tunits); share = TRx / market TRx; payer split from the claim payment type; target coverage = targets with ≥1 call / targets",
+      formula: "MDD market TRx = SUM(trx_mkt_total); Trivaxa TRx = SUM(tunits); share = TRx / market TRx; payer split from the claim payment type; target coverage = targets with ≥1 call / targets",
     },
   }
 }
@@ -408,12 +408,12 @@ export function hcpOpportunity(): { rows: OpportunityRow[]; medians: { potential
     const c13 = calls13.get(h.npi) ?? 0
     let action: string, reason: string
     if (t.whiteSpace && hiPot) { action = "Flag for alignment review"; reason = "High-potential HCP sits in White Space; no rep can call" }
-    else if (quadrant === "Convert" && c13 === 0) { action = "Schedule first call"; reason = `Top-half market volume (${v.mkt} MDD TRx / 13 wk), no Escitalopram, zero calls in 13 weeks` }
-    else if (quadrant === "Convert" && status === "Lapsed writer") { action = "Re-engage lapsed writer"; reason = `Wrote Escitalopram before, none in ${s === "Lapsed" ? "8+" : "4–7"} weeks; market volume still high` }
-    else if (quadrant === "Convert") { action = "Add copay/starter detail"; reason = `Called ${c13}× in 13 weeks but no Escitalopram; ${v.bu > 0 ? "buspirone writer" : "branded writer"} profile matches current Escitalopram writers` }
+    else if (quadrant === "Convert" && c13 === 0) { action = "Schedule first call"; reason = `Top-half market volume (${v.mkt} MDD TRx / 13 wk), no Trivaxa, zero calls in 13 weeks` }
+    else if (quadrant === "Convert" && status === "Lapsed writer") { action = "Re-engage lapsed writer"; reason = `Wrote Trivaxa before, none in ${s === "Lapsed" ? "8+" : "4–7"} weeks; market volume still high` }
+    else if (quadrant === "Convert") { action = "Add copay/starter detail"; reason = `Called ${c13}× in 13 weeks but no Trivaxa; ${v.bu > 0 ? "buspirone writer" : "branded writer"} profile matches current Trivaxa writers` }
     else if (quadrant === "Grow") { action = "Maintain frequency"; reason = `Writing ${v.brand} TRx / 13 wk with share ${((v.brand / Math.max(1, v.mkt)) * 100).toFixed(1)}% of a large market` }
-    else if (quadrant === "Defend") { action = "Protect: check access"; reason = "Writing Escitalopram but small total market; watch for lapse" }
-    else { action = "Deprioritize"; reason = "Bottom-half market volume and no Escitalopram activity" }
+    else if (quadrant === "Defend") { action = "Protect: check access"; reason = "Writing Trivaxa but small total market; watch for lapse" }
+    else { action = "Deprioritize"; reason = "Bottom-half market volume and no Trivaxa activity" }
     return {
       npi: h.npi, name: hcpName(h), specialty: h.specialty, tier: h.tier, territoryCode: t.code, territory: t.name, whiteSpace: !!t.whiteSpace, state: h.state, city: h.city,
       brand13: v.brand, mkt13: v.mkt, branded13: v.br, buspirone13: v.bu, auvelity13: v.au, share13: v.mkt ? v.brand / v.mkt : 0,
@@ -429,7 +429,7 @@ export function hcpOpportunity(): { rows: OpportunityRow[]; medians: { potential
       sources: ["fact_rx_hcp_weekly", "fact_crm_calls", "fact_field_emails", "dim_zip_territory_alignment", "dim_hcp_target_list"],
       window: `Trailing 13 weeks ending w/e ${data.latestWeek.end}`,
       filters: ["All HCPs in the HCP master, including White Space"],
-      formula: "Potential = 0.50·pct-rank(MDD market TRx) + 0.25·pct-rank(branded MDD TRx) + 0.15·pct-rank(buspirone TRx) + 0.10·pct-rank(Auvelity TRx). Current = Escitalopram TRx. Quadrants split at the median potential and the median non-zero TRx.",
+      formula: "Potential = 0.50·pct-rank(MDD market TRx) + 0.25·pct-rank(branded MDD TRx) + 0.15·pct-rank(buspirone TRx) + 0.10·pct-rank(Auvelity TRx). Current = Trivaxa TRx. Quadrants split at the median potential and the median non-zero TRx.",
       notes: [
         "The weights are a starting point, deliberately simple and visible; the chat users asked for this correlation-based look-alike list at least six different ways and got a different answer each time.",
         "Next-best-action is rule-based text, not a model, so a rep can read exactly why an HCP is on the list.",
@@ -475,7 +475,7 @@ export function callsBeforeFirstRx() {
   const writers = new Set(life.rows.map((r) => r.npi))
   const calledNeverWrote = [...inPersonCallsByNpi.keys()].filter((npi) => !writers.has(npi)).length
   const def: Definition = {
-    title: "In-person calls before first Escitalopram Rx",
+    title: "In-person calls before first Trivaxa Rx",
     sources: ["fact_crm_calls", "fact_rx_hcp_weekly"],
     window: "Launch through latest loaded week",
     filters: ["In-person = Face-to-face with HCP, HCP Meal, Office Visit (no prescriber contact)", "Calls in weeks strictly before the first week with tunits > 0"],
@@ -567,7 +567,7 @@ export function channelSplit(key: WindowKey) {
   const rows = CHANNELS.map((c) => ({ channel: c, trx: acc[c].trx, share: total ? acc[c].trx / total : 0, starts: Math.round(acc[c].starts), cont: Math.round(acc[c].cont), nrx: Math.round(acc[c].nrx) }))
   const ws = [...weeks].sort((a, b) => a - b)
   const def: Definition = {
-    title: `Escitalopram TRx by payer channel — ${WINDOW_LABEL[key]}`,
+    title: `Trivaxa TRx by payer channel — ${WINDOW_LABEL[key]}`,
     sources: ["fact_rx_hcp_weekly"],
     window: `w/e ${data.weeks[ws[0]].end} through w/e ${data.weeks[ws[ws.length - 1]].end} (${ws.length} weeks)`,
     filters: ["Payment type collapsed to Commercial / Medicaid / Medicare / TriCare / Cash"],
@@ -587,11 +587,11 @@ export function medicaidPlanPivot(weeks = 12) {
     .filter((r) => r.total > 0)
     .sort((a, b) => b.total - a.total)
   const def: Definition = {
-    title: `Medicaid / Managed Medicaid plans × week, Escitalopram TRx`,
+    title: `Medicaid / Managed Medicaid plans × week, Trivaxa TRx`,
     sources: ["fact_rx_plan_weekly", "dim_payer_plan"],
     window: `Last ${weeks} weeks ending w/e ${data.latestWeek.end}`,
     filters: ["payment_type IN (Medicaid, Managed Medicaid)", "Plans with zero volume in the window hidden"],
-    formula: "Plans as rows, week ending dates as columns, Escitalopram TRx in the cells, sorted by window total",
+    formula: "Plans as rows, week ending dates as columns, Trivaxa TRx in the cells, sorted by window total",
     notes: ["This exact layout was requested three times in chat with slightly different wording."],
   }
   return { cols: cols.map((c) => c.end), rows, def }
@@ -613,9 +613,9 @@ export function copaySummary() {
   }
   const pharmacies = [...byPharmacy.entries()].map(([pharmacy, v]) => ({ pharmacy, network: v.network, claims: v.claims, blended: v.copay / v.claims, avgOop: v.oop / v.claims, spend: v.copay })).sort((a, b) => b.claims - a.claims)
   const weekly = data.weeks.slice(data.launchWeekIndex).map((w) => ({ week: w.end, net: net.filter((c) => c.weekIndex === w.index).length, reversals: claims.filter((c) => c.weekIndex === w.index && c.reversal).length }))
-  const starter = net.filter((c) => c.product === "Escitalopram Starter").length
+  const starter = net.filter((c) => c.product === "Trivaxa Starter").length
   const def: Definition = {
-    title: "Escitalopram copay program summary",
+    title: "Trivaxa copay program summary",
     sources: ["fact_copay_claims"],
     window: `Program start through ${data.freshness[1].asOf}`,
     filters: ["Net of reversals unless labelled otherwise", "Network = is_network_pharmacy = 1", "Patients counted on claim_broad_member_id"],

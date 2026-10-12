@@ -24,7 +24,7 @@ export default function PayersPage() {
       <PageHeader title="Payers & Copay" description="Channel mix with starts vs continuing, the Medicaid plan × week pivot, and the copay program" />
       <div className="flex-1 space-y-6 p-4 md:p-6">
         <Section
-          title="Escitalopram TRx by payer channel"
+          title="Trivaxa TRx by payer channel"
           description="The four windows the chat users asked about, side by side with one definition"
           def={split.def}
           actions={
@@ -48,7 +48,7 @@ export default function PayersPage() {
               <DataTable
                 rows={split.rows}
                 dense
-                filename={`escitalopram_channel_split_${win}.csv`}
+                filename={`trivaxa_channel_split_${win}.csv`}
                 rowKey={(r) => r.channel}
                 columns={[
                   { key: "c", header: "Channel", value: (r) => r.channel, render: (r) => <span className="flex items-center gap-2"><span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: COLORS[split.rows.indexOf(r) % COLORS.length] }} />{r.channel}</span> },
@@ -64,7 +64,7 @@ export default function PayersPage() {
           </div>
         </Section>
 
-        <Section title="Medicaid & Managed Medicaid plans × week" description="Plans down, week-ending dates across, Escitalopram TRx in the cells" def={pivot.def}>
+        <Section title="Medicaid & Managed Medicaid plans × week" description="Plans down, week-ending dates across, Trivaxa TRx in the cells" def={pivot.def}>
           <div className="overflow-x-auto rounded-md border">
             <table className="w-full text-xs">
               <thead className="bg-muted/50">
@@ -108,7 +108,7 @@ export default function PayersPage() {
             <DataTable
               rows={copay.pharmacies}
               dense
-              filename="escitalopram_copay_pharmacies.csv"
+              filename="trivaxa_copay_pharmacies.csv"
               rowKey={(r) => r.pharmacy}
               columns={[
                 { key: "p", header: "Pharmacy", value: (r) => r.pharmacy },

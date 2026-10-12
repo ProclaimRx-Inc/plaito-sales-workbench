@@ -1,5 +1,5 @@
 /**
- * Synthetic Escitalopram sales dataset.
+ * Synthetic Trivaxa sales dataset.
  *
  * Everything on every page is derived from the objects built here. The
  * generator is seeded, so the numbers are identical on every load and on
@@ -69,7 +69,7 @@ export type PayerChannel = "Commercial" | "Medicaid" | "Medicare" | "TriCare" | 
 export type RxWeek = {
   npi: string
   weekIndex: number
-  /** Escitalopram TRx (tunits) */
+  /** Trivaxa TRx (tunits) */
   brandTrx: number
   brandNrx: number
   brandStarts: number // starter pack
@@ -114,7 +114,7 @@ export type CopayClaim = {
   pharmacyState: string
   network: boolean
   reversal: boolean
-  product: "Escitalopram 10 mg" | "Escitalopram Starter"
+  product: "Trivaxa 10 mg" | "Trivaxa Starter"
   copay: number
   oop: number
   channel: PayerChannel
@@ -136,7 +136,7 @@ export type Dataset = {
   emails: Email[]
   copay: CopayClaim[]
   medicaidPlans: MedicaidPlan[]
-  /** planId -> weekIndex -> Escitalopram TRx */
+  /** planId -> weekIndex -> Trivaxa TRx */
   medicaidPlanRx: Record<string, Record<number, number>>
   /** goal per territory per quarter (TRx) */
   goals: Record<string, Record<string, number>>

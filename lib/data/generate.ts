@@ -111,7 +111,7 @@ const PHARMACIES: { name: string; network: boolean }[] = [
   { name: "Kroger Pharmacy", network: false },
 ]
 
-const EMAIL_TEMPLATES = ["Escitalopram Efficacy Overview", "Starter Made Simple", "Copay Savings Program", "Sexual Function Data", "Weight Neutrality", "Patient Case: First-Line Switch", "Speaker Program Invite"]
+const EMAIL_TEMPLATES = ["Trivaxa Efficacy Overview", "Starter Made Simple", "Copay Savings Program", "Sexual Function Data", "Weight Neutrality", "Patient Case: First-Line Switch", "Speaker Program Invite"]
 
 const MCO = ["Centene", "UnitedHealth Group", "Molina", "Elevance", "CVS Health (Aetna)", "State FFS"]
 
@@ -289,7 +289,7 @@ export function generate(): Dataset {
         const h = weightedPick(pool)
         const dow = r.int(0, 4) // Mon..Fri
         const date = addDays(w.end, -(4 - dow))
-        calls.push({ id: `C${++callN}`, npi: h.npi, repId: rep.id, date, weekIndex: w.index, type: pickCallType(), products: r.chance(0.3) ? ["Escitalopram", "Vilazodone"] : ["Escitalopram"] })
+        calls.push({ id: `C${++callN}`, npi: h.npi, repId: rep.id, date, weekIndex: w.index, type: pickCallType(), products: r.chance(0.3) ? ["Trivaxa", "Vilazodone"] : ["Trivaxa"] })
       }
     }
   }
@@ -329,7 +329,7 @@ export function generate(): Dataset {
       else { member = `P${String(r.int(100000, 999999))}`; list.push(member); members.set(h.npi, list) }
       copay.push({
         id: `T${++claimN}`, npi: h.npi, weekIndex: row.weekIndex, pharmacy: ph.name, pharmacyState: h.state, network: ph.network,
-        reversal: r.chance(0.045), product: isStart ? "Escitalopram Starter" : "Escitalopram 10 mg", copay: ph.network ? r.int(180, 260) : r.int(240, 420), oop: ph.network ? 0 : r.pick([0, 0, 10, 25, 35]),
+        reversal: r.chance(0.045), product: isStart ? "Trivaxa Starter" : "Trivaxa 10 mg", copay: ph.network ? r.int(180, 260) : r.int(240, 420), oop: ph.network ? 0 : r.pick([0, 0, 10, 25, 35]),
         channel: r.chance(0.9) ? "Commercial" : "Cash", memberId: member,
       })
     }

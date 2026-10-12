@@ -19,7 +19,7 @@ export default function PulsePage() {
 
   return (
     <>
-      <PageHeader title="Launch Pulse" description={`Escitalopram national view · Rx data through ${fmtDate(h.last.week)}`} />
+      <PageHeader title="Launch Pulse" description={`Trivaxa national view · Rx data through ${fmtDate(h.last.week)}`} />
       <div className="flex-1 space-y-6 p-4 md:p-6">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           <Kpi label="TRx, latest week" value={fmtInt(h.last.brandTrx)} delta={h.wowPct} sub={`${fmtDelta(h.wow)} vs ${fmtWeek(h.prev.week)}`} def={trend.def} />
@@ -75,7 +75,7 @@ export default function PulsePage() {
               rows={bridge.movers}
               limit={12}
               dense
-              filename={`escitalopram_movers_${h.last.week}.csv`}
+              filename={`trivaxa_movers_${h.last.week}.csv`}
               rowKey={(r) => r.npi}
               columns={[
                 { key: "name", header: "HCP", value: (r) => r.name },

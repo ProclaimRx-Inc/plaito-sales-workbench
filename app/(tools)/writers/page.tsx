@@ -14,7 +14,7 @@ import { fmtInt, fmtMonth, fmtPct, fmtWeek } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
 const SEGMENTS: { key: WriterSegment; tone: string; hint: string }[] = [
-  { key: "New", tone: "border-emerald-500/50", hint: "First Escitalopram Rx this week" },
+  { key: "New", tone: "border-emerald-500/50", hint: "First Trivaxa Rx this week" },
   { key: "Repeat", tone: "border-sky-500/50", hint: "Wrote again, not yet every week" },
   { key: "Consistent", tone: "border-violet-500/50", hint: "≥3 of the last 4 weeks" },
   { key: "At risk", tone: "border-amber-500/50", hint: "Nothing in 4–7 weeks" },
@@ -47,7 +47,7 @@ export default function WritersPage() {
         </div>
 
         <Section
-          title="New Escitalopram prescribers report"
+          title="New Trivaxa prescribers report"
           description="Fixed columns, one row per NPI, exportable. Pick the week."
           def={report.def}
           actions={
@@ -62,7 +62,7 @@ export default function WritersPage() {
           <DataTable
             rows={report.rows}
             dense
-            filename={`escitalopram_new_writers_${data.weeks[weekIndex].end}.csv`}
+            filename={`trivaxa_new_writers_${data.weeks[weekIndex].end}.csv`}
             rowKey={(r) => r.npi}
             emptyText="No first-time writers in this week"
             columns={[
@@ -82,7 +82,7 @@ export default function WritersPage() {
         </Section>
 
         <div className="grid gap-6 lg:grid-cols-5">
-          <Section className="lg:col-span-2" title="Do new writers write again?" description="Repeat rate by the month of the first Escitalopram Rx" def={cohorts.def}>
+          <Section className="lg:col-span-2" title="Do new writers write again?" description="Repeat rate by the month of the first Trivaxa Rx" def={cohorts.def}>
             <DataTable
               rows={cohorts.rows}
               dense
@@ -98,7 +98,7 @@ export default function WritersPage() {
           </Section>
           <Section
             className="lg:col-span-3"
-            title={segment === "All" ? "All Escitalopram writers" : `${segment} writers`}
+            title={segment === "All" ? "All Trivaxa writers" : `${segment} writers`}
             description="Click a segment tile above to filter. Sorted by TRx in the last 13 weeks."
             def={life.def}
             actions={segment !== "All" && <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setSegment("All")}>Clear</Button>}
@@ -107,7 +107,7 @@ export default function WritersPage() {
               rows={[...filtered].sort((a, b) => b.last13 - a.last13)}
               dense
               limit={25}
-              filename={`escitalopram_writers_${segment.toLowerCase().replace(" ", "_")}.csv`}
+              filename={`trivaxa_writers_${segment.toLowerCase().replace(" ", "_")}.csv`}
               rowKey={(r) => r.npi}
               columns={[
                 { key: "name", header: "HCP", value: (r) => r.name },
